@@ -7,10 +7,12 @@ import java.util.stream.Collectors;
 import org.encog.ml.genetic.genome.CalculateGenomeScore;
 import org.encog.ml.genetic.genome.Genome;
 
+import com.adarrivi.factory.auditor.SatisfactionAuditor;
+
 public class Planning implements CalculateGenomeScore {
 
     private List<String> allLines = new ArrayList<>();
-    private List<Driver> allDrivers = new ArrayList<>();
+    private List<Worker> allWorkers = new ArrayList<>();
     private List<Integer> allDays = new ArrayList<>();
 
     public int getPlanningSize() {
@@ -19,7 +21,9 @@ public class Planning implements CalculateGenomeScore {
 
     @Override
     public double calculateScore(Genome genome) {
-        return 0;
+        SatisfactionAuditor auditor = new SatisfactionAuditor((Planning) genome.getOrganism());
+        auditor.auditPlanning();
+        return auditor.getScore();
     }
 
     @Override
@@ -27,28 +31,28 @@ public class Planning implements CalculateGenomeScore {
         return true;
     }
 
-    public List<Driver> getAllDrivers() {
-        return allDrivers;
+    public List<Worker> getAllWorkers() {
+        return allWorkers;
     }
 
     public List<Integer> getAllDays() {
         return allDays;
     }
 
-    public void setNewShift(String driverName, int day, int line, ShiftType shiftType) {
-        Driver driver = getDriverByName(driverName);
-        driver.setShift(day, line, shiftType);
+    public void setNewShift(String workerName, int day, String line, ShiftType shiftType) {
+        Worker worker = getWorkerByName(workerName);
+        worker.setShift(day, line, shiftType);
     }
 
-    private Driver getDriverByName(String driverName) {
-        return allDrivers.stream().filter(driver -> driver.getName().equals(driverName)).findAny().get();
+    private Worker getWorkerByName(String workerName) {
+        return allWorkers.stream().filter(worker -> worker.getName().equals(workerName)).findAny().get();
     }
 
     public Planning duplicate() {
         Planning duplicate = new Planning();
         duplicate.allDays = allDays;
         duplicate.allLines = allLines;
-        duplicate.allDrivers = allDrivers.stream().map(Driver::duplicate).collect(Collectors.toList());
+        duplicate.allWorkers = allWorkers.stream().map(Worker::duplicate).collect(Collectors.toList());
         return duplicate;
     }
 }

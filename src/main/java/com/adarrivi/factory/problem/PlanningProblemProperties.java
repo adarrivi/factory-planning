@@ -43,4 +43,8 @@ public class PlanningProblemProperties {
         return planning;
     }
 
+    public int getAllowedHolidays() {
+        return allowedHolidays;
+    }
+
 }

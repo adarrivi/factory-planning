@@ -3,9 +3,6 @@ package com.adarrivi.factory.problem;
 import org.encog.ml.genetic.BasicGeneticAlgorithm;
 import org.encog.ml.genetic.GeneticAlgorithm;
 import org.encog.ml.genetic.crossover.SpliceNoRepeat;
-import org.encog.ml.genetic.genes.Gene;
-import org.encog.ml.genetic.genes.IntegerGene;
-import org.encog.ml.genetic.genome.Chromosome;
 import org.encog.ml.genetic.genome.Genome;
 import org.encog.ml.genetic.mutate.MutateShuffle;
 import org.encog.ml.genetic.population.BasicPopulation;
@@ -14,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.adarrivi.factory.genetics.PlanningGenome;
-import com.adarrivi.factory.planning.Auditor;
 import com.adarrivi.factory.planning.Planning;
 
 public class GeneticPlanningSolver {
@@ -47,7 +43,7 @@ public class GeneticPlanningSolver {
 
         for (int i = 0; i < initalPopulationSize; i++) {
             PlanningGenome genome = new PlanningGenome();
-            genome.createRandomGenome(problemProperties.getPlanning());
+            genome.createRandomGenome(problemProperties);
             geneticAlgorithm.getPopulation().add(genome);
             geneticAlgorithm.calculateScore(genome);
         }
@@ -57,35 +53,25 @@ public class GeneticPlanningSolver {
 
     public void solve() {
         int sameSolutionCount = 0;
-        int iteration = 1;
         double lastSolution = Double.MAX_VALUE;
         while (sameSolutionCount < problemProperties.getMaxSameSolution()) {
             geneticAlgorithm.iteration();
             Genome bestGenome = geneticAlgorithm.getPopulation().getBest();
-            Auditor auditor = new Auditor((Planning) bestGenome.getOrganism(), bestGenome.getScore(), iteration++);
-            if (Math.abs(lastSolution - auditor.getScore()) < 1.0) {
+            double score = bestGenome.getScore();
+            if (Math.abs(lastSolution - score) < 1.0) {
                 sameSolutionCount++;
             } else {
                 sameSolutionCount = 0;
             }
 
-            lastSolution = auditor.getScore();
+            lastSolution = score;
         }
-        LOG.debug("Good solution found:");
         displaySolution();
     }
 
     private void displaySolution() {
-        boolean first = true;
-        Chromosome bestChromosome = geneticAlgorithm.getPopulation().getBest().getChromosomes().get(0);
-        StringBuffer sb = new StringBuffer();
-        for (Gene gene : bestChromosome.getGenes()) {
-            if (!first) {
-                sb.append(">");
-            }
-            sb.append(((IntegerGene) gene).getValue());
-            first = false;
-        }
-        LOG.debug(sb.toString());
+        Genome bestGenome = geneticAlgorithm.getPopulation().getBest();
+        Planning bestPlanning = (Planning) bestGenome.getOrganism();
+        LOG.debug("Best planning found with score {}: {}", bestGenome.getScore(), bestPlanning);
     }
 }

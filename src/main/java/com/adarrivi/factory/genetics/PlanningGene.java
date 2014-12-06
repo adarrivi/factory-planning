@@ -5,19 +5,19 @@ import java.util.Objects;
 import org.encog.ml.genetic.genes.BasicGene;
 import org.encog.ml.genetic.genes.Gene;
 
-import com.adarrivi.factory.planning.DriverDay;
 import com.adarrivi.factory.planning.ShiftType;
+import com.adarrivi.factory.planning.WorkerDay;
 
 public class PlanningGene extends BasicGene {
 
     private static final long serialVersionUID = 1L;
-    private String driverName;
+    private String workerName;
     private int day;
     private ShiftType shiftType;
-    private int line;
+    private String line;
 
-    public PlanningGene(String driverName, DriverDay workDay) {
-        this.driverName = driverName;
+    public PlanningGene(String workerName, WorkerDay workDay) {
+        this.workerName = workerName;
         this.day = workDay.getDay();
         this.shiftType = workDay.getShiftType();
         this.line = workDay.getLine();
@@ -26,14 +26,14 @@ public class PlanningGene extends BasicGene {
     @Override
     public void copy(Gene fromGene) {
         PlanningGene fromPlannignGene = (PlanningGene) fromGene;
-        this.driverName = fromPlannignGene.driverName;
+        this.workerName = fromPlannignGene.workerName;
         this.day = fromPlannignGene.day;
         this.shiftType = fromPlannignGene.shiftType;
         this.line = fromPlannignGene.line;
     }
 
-    public String getDriverName() {
-        return driverName;
+    public String getWorkerName() {
+        return workerName;
     }
 
     public int getDay() {
@@ -44,13 +44,13 @@ public class PlanningGene extends BasicGene {
         return shiftType;
     }
 
-    public int getLine() {
+    public String getLine() {
         return line;
     }
 
     @Override
     public final int hashCode() {
-        return Objects.hash(driverName, day, shiftType, line);
+        return Objects.hash(workerName, day, shiftType, line);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class PlanningGene extends BasicGene {
         }
         PlanningGene other = (PlanningGene) obj;
         // neither of the attributes should have a null value
-        return driverName.equals(other.driverName) && day == other.day && shiftType.equals(other.shiftType) && line == other.line;
+        return workerName.equals(other.workerName) && day == other.day && shiftType.equals(other.shiftType) && line == other.line;
     }
 
 }
