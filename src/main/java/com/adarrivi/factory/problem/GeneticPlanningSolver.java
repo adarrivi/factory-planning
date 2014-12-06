@@ -46,8 +46,8 @@ public class GeneticPlanningSolver {
         geneticAlgorithm.setPopulation(population);
 
         for (int i = 0; i < initalPopulationSize; i++) {
-            PlanningGenome genome = new PlanningGenome(problemProperties.getPlanning());
-            genome.createRandomGenome();
+            PlanningGenome genome = new PlanningGenome();
+            genome.createRandomGenome(problemProperties.getPlanning());
             geneticAlgorithm.getPopulation().add(genome);
             geneticAlgorithm.calculateScore(genome);
         }
