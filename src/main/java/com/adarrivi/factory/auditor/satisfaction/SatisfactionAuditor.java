@@ -1,4 +1,4 @@
-package com.adarrivi.factory.auditor;
+package com.adarrivi.factory.auditor.satisfaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,8 @@ import java.util.List;
 import com.adarrivi.factory.planning.Planning;
 
 public class SatisfactionAuditor {
+
+    private static final double BASIC_SCORE = 10000;
 
     private double score;
     private List<SatisfactionRule> satisfactionRules = new ArrayList<>();
@@ -25,7 +27,7 @@ public class SatisfactionAuditor {
     }
 
     public double getScore() {
-        return score;
+        return BASIC_SCORE - score;
     }
 
 }

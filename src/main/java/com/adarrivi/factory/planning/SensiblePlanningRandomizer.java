@@ -1,16 +1,16 @@
 package com.adarrivi.factory.planning;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
+import com.adarrivi.factory.auditor.correctness.CorrectnessAuditor;
 import com.adarrivi.factory.problem.PlanningProblemProperties;
 
 public class SensiblePlanningRandomizer {
 
     private static final Random RANDOM = new Random();
-    private static final List<ShiftType> SHIFT_TYPES = Arrays.asList(ShiftType.MORNING, ShiftType.AFTERNOON, ShiftType.HOLIDAY);
-    private static final List<ShiftType> SHIFT_TYPES_NO_HOLIDAYS = Arrays.asList(ShiftType.MORNING, ShiftType.AFTERNOON);
 
     private PlanningProblemProperties problem;
     private Planning planning;
@@ -21,27 +21,40 @@ public class SensiblePlanningRandomizer {
     }
 
     public Planning getRandomizedPlaning() {
+        planning.getAllWorkers().forEach(this::randomizeWorker);
+        CorrectnessAuditor correctnessAuditor = new CorrectnessAuditor(planning);
+        correctnessAuditor.isPlanningCorrect();
         return planning;
     }
 
     private void randomizeWorker(Worker worker) {
         int holidaysLeft = problem.getAllowedHolidays();
         for (WorkerDay day : worker.getAllWorkerDays()) {
-            // TODO validate global availability of the line and shift!!
-            ShiftType randomShift = getRandomElement(SHIFT_TYPES);
-            String randomLine = getRandomElement(worker.getAllowedLines());
-            if (holidaysLeft == 0) {
-                randomShift = getRandomElement(SHIFT_TYPES_NO_HOLIDAYS);
-            }
-            day.setShift(randomLine, randomShift);
-            if (day.isHoliday()) {
-                holidaysLeft--;
+            boolean includingHolidays = holidaysLeft > 0;
+            Optional<WorkerDay> randomLineShift = getValidRandomLineShift(day.getDay(), worker, includingHolidays);
+            if (randomLineShift.isPresent()) {
+                WorkerDay shift = randomLineShift.get();
+                day.setShift(shift.getLine(), shift.getShiftType());
+                if (day.isHoliday()) {
+                    holidaysLeft--;
+                }
             }
         }
     }
 
-    private <T> T getRandomElement(List<T> elementList) {
-        return elementList.get(RANDOM.nextInt(elementList.size()));
+    private Optional<WorkerDay> getValidRandomLineShift(int day, Worker worker, boolean includingHolidays) {
+        List<WorkerDay> missingShifts = planning.getMissingShifts(day).stream()
+                .filter(workerDay -> worker.getAllowedLines().contains(workerDay.getLine())).collect(Collectors.toList());
+        if (includingHolidays) {
+            missingShifts.add(WorkerDay.createHoliday(day));
+        }
+        return getRandomElement(missingShifts);
     }
 
+    private <T> Optional<T> getRandomElement(List<T> elementList) {
+        if (elementList.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(elementList.get(RANDOM.nextInt(elementList.size())));
+    }
 }

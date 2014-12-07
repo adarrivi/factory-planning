@@ -1,17 +1,40 @@
 package com.adarrivi.factory.planning;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class WorkerDay {
+
+    private static final String EMPTY_STRING = "";
 
     private int day;
     private ShiftType shiftType;
     private String line;
 
-    public WorkerDay(int day, ShiftType shiftType, String line) {
+    private WorkerDay(int day, ShiftType shiftType, String line) {
         this.day = day;
         this.shiftType = shiftType;
         this.line = line;
+    }
+
+    public static WorkerDay createWorkDay(int day, ShiftType shiftType, String line) {
+        return new WorkerDay(day, shiftType, line);
+    }
+
+    public static WorkerDay createEmptyDay(int day) {
+        return new WorkerDay(day, ShiftType.EMPTY, EMPTY_STRING);
+    }
+
+    public static List<WorkerDay> createAllShiftsForDay(int day, String line) {
+        List<WorkerDay> shifts = new ArrayList<>();
+        shifts.add(WorkerDay.createWorkDay(day, ShiftType.MORNING, line));
+        shifts.add(WorkerDay.createWorkDay(day, ShiftType.AFTERNOON, line));
+        return shifts;
+    }
+
+    public static WorkerDay createHoliday(int day) {
+        return new WorkerDay(day, ShiftType.HOLIDAY, EMPTY_STRING);
     }
 
     public int getDay() {
@@ -39,6 +62,10 @@ public class WorkerDay {
         return ShiftType.HOLIDAY.equals(shiftType);
     }
 
+    boolean isWorkingDay() {
+        return ShiftType.MORNING.equals(shiftType) || ShiftType.AFTERNOON.equals(shiftType);
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(shiftType, day);
@@ -60,6 +87,11 @@ public class WorkerDay {
         }
         WorkerDay other = (WorkerDay) obj;
         return day == other.day && shiftType.equals(other.shiftType);
+    }
+
+    @Override
+    public String toString() {
+        return "[day=" + day + ", line=" + line + ", shift: " + shiftType + "]";
     }
 
 }

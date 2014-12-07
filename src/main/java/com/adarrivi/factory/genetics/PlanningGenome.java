@@ -10,7 +10,6 @@ import org.encog.ml.genetic.genome.Chromosome;
 import com.adarrivi.factory.planning.Planning;
 import com.adarrivi.factory.planning.SensiblePlanningRandomizer;
 import com.adarrivi.factory.planning.Worker;
-import com.adarrivi.factory.planning.WorkerDay;
 import com.adarrivi.factory.problem.PlanningProblemProperties;
 
 public class PlanningGenome extends BasicGenome {
@@ -36,16 +35,6 @@ public class PlanningGenome extends BasicGenome {
         setOrganism(randomizer.getRandomizedPlaning());
     }
 
-    private List<PlanningGene> toPlanningGenes(Worker worker, List<Integer> allDays) {
-        return allDays.stream().map(day -> toPlanningGene(worker, day)).collect(Collectors.toList());
-    }
-
-    private PlanningGene toPlanningGene(Worker worker, int day) {
-        WorkerDay workingDay = worker.getDay(day).get();
-        return new PlanningGene(worker.getName(), workingDay);
-
-    }
-
     @Override
     public void decode() {
         Planning planning = (Planning) getOrganism();
@@ -64,6 +53,15 @@ public class PlanningGenome extends BasicGenome {
                 .flatMap(worker -> toPlanningGenes(worker, planning.getAllDays()).stream());
         Chromosome planningChromosome = getChromosome();
         genes.forEach(gene -> planningChromosome.getGenes().add(gene));
+    }
+
+    private List<PlanningGene> toPlanningGenes(Worker worker, List<Integer> allDays) {
+        return allDays.stream().map(day -> toPlanningGene(worker, day)).collect(Collectors.toList());
+    }
+
+    private PlanningGene toPlanningGene(Worker worker, int day) {
+        return new PlanningGene(worker.getName(), worker.getDay(day));
+
     }
 
 }

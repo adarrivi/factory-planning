@@ -54,17 +54,19 @@ public class GeneticPlanningSolver {
     public void solve() {
         int sameSolutionCount = 0;
         double lastSolution = Double.MAX_VALUE;
+        int iteration = 0;
         while (sameSolutionCount < problemProperties.getMaxSameSolution()) {
             geneticAlgorithm.iteration();
             Genome bestGenome = geneticAlgorithm.getPopulation().getBest();
-            double score = bestGenome.getScore();
-            if (Math.abs(lastSolution - score) < 1.0) {
+            double bestScore = bestGenome.getScore();
+            if (Math.abs(lastSolution - bestScore) < 1.0) {
                 sameSolutionCount++;
             } else {
                 sameSolutionCount = 0;
             }
-
-            lastSolution = score;
+            iteration++;
+            lastSolution = bestScore;
+            LOG.debug("Iteration {}, best score {}", iteration, bestScore);
         }
         displaySolution();
     }
@@ -72,6 +74,6 @@ public class GeneticPlanningSolver {
     private void displaySolution() {
         Genome bestGenome = geneticAlgorithm.getPopulation().getBest();
         Planning bestPlanning = (Planning) bestGenome.getOrganism();
-        LOG.debug("Best planning found with score {}: {}", bestGenome.getScore(), bestPlanning);
+        LOG.debug("Best planning found with score {}: \n{}", bestGenome.getScore(), bestPlanning);
     }
 }

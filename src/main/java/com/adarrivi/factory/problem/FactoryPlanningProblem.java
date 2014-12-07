@@ -1,11 +1,11 @@
 package com.adarrivi.factory.problem;
 
-public class RandomPlanningProblem {
+public class FactoryPlanningProblem {
 
     private PlanningProblemProperties problemProperties;
     private GeneticPlanningSolver problemSolver;
 
-    public RandomPlanningProblem(PlanningProblemProperties problemProperties) {
+    public FactoryPlanningProblem(PlanningProblemProperties problemProperties) {
         this.problemProperties = problemProperties;
     }
 

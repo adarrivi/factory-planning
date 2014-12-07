@@ -12,8 +12,15 @@ public class PlanningProblemProperties {
     private static final int DEFAULT_CROSSOVER_SLICES = 3;
 
     private int allowedHolidays;
-    private int numberOfDays;
     private Planning planning;
+
+    public void setPrefferedPlanning(Planning prefferedPlanning) {
+        planning = prefferedPlanning;
+    }
+
+    public void setAllowedHolidays(int allowedHolidays) {
+        this.allowedHolidays = allowedHolidays;
+    }
 
     public double getMutationPercent() {
         return DEFAULT_MUTATION_PERCENT;

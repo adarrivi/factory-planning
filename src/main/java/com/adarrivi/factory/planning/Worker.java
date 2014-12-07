@@ -2,19 +2,32 @@ package com.adarrivi.factory.planning;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Worker {
 
     private static final Predicate<WorkerDay> HOLIDAY_ONLY_PREDICATE = (day) -> day.isHoliday();
-    private static final Predicate<WorkerDay> WORKING_ONLY_PREDICATE = (day) -> !day.isHoliday();
+    private static final Predicate<WorkerDay> WORKING_ONLY_PREDICATE = (day) -> day.isWorkingDay();
 
     private String name;
     private List<String> allowedLines = new ArrayList<>();
     private List<WorkerDay> workDays = new ArrayList<>();
     private List<WorkerDay> prefferedDays = new ArrayList<>();
+
+    private Worker(String name, List<String> allowedLines, List<WorkerDay> workDays, List<WorkerDay> prefferedDays) {
+        this.name = name;
+        this.allowedLines = allowedLines;
+        this.workDays = workDays;
+        this.prefferedDays = prefferedDays;
+    }
+
+    public static Worker createWorkerEmptyPlanning(String name, List<String> allowedLines, List<Integer> planningDays,
+            List<WorkerDay> prefferedDays) {
+        List<WorkerDay> workerDays = new ArrayList<>();
+        planningDays.forEach(day -> workerDays.add(WorkerDay.createEmptyDay(day)));
+        return new Worker(name, allowedLines, workerDays, prefferedDays);
+    }
 
     public String getName() {
         return name;
@@ -28,8 +41,8 @@ public class Worker {
         return allowedLines;
     }
 
-    public Optional<WorkerDay> getDay(int day) {
-        return workDays.stream().filter(workDay -> workDay.getDay() == day).findAny();
+    public WorkerDay getDay(int day) {
+        return workDays.stream().filter(workDay -> workDay.getDay() == day).findAny().get();
     }
 
     public List<WorkerDay> getWorkShiftPreferences() {
@@ -53,16 +66,18 @@ public class Worker {
     }
 
     public Worker duplicate() {
-        Worker duplicate = new Worker();
-        duplicate.name = name;
-        duplicate.allowedLines = allowedLines;
-        duplicate.prefferedDays = prefferedDays;
-        duplicate.workDays = workDays.stream().map(WorkerDay::duplicate).collect(Collectors.toList());
-        return duplicate;
+        List<WorkerDay> duplicatedWorkerDays = workDays.stream().map(WorkerDay::duplicate).collect(Collectors.toList());
+        return new Worker(name, allowedLines, duplicatedWorkerDays, prefferedDays);
     }
 
     void setShift(int day, String line, ShiftType shiftType) {
         WorkerDay workingDay = workDays.stream().filter(workDay -> workDay.getDay() == day).findAny().get();
         workingDay.setShift(line, shiftType);
     }
+
+    @Override
+    public String toString() {
+        return "Worker: " + name + ", " + allowedLines + ", holidays: " + getHolidays().size() + "\n\t" + workDays + "]";
+    }
+
 }

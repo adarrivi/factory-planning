@@ -1,4 +1,4 @@
-package com.adarrivi.factory.auditor;
+package com.adarrivi.factory.auditor.satisfaction;
 
 import com.adarrivi.factory.planning.Planning;
 

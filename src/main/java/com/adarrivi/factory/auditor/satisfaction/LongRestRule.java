@@ -1,4 +1,4 @@
-package com.adarrivi.factory.auditor;
+package com.adarrivi.factory.auditor.satisfaction;
 
 import java.util.List;
 
@@ -8,6 +8,7 @@ import com.adarrivi.factory.planning.WorkerDay;
 
 class LongRestRule extends PlanningBasedSatisfactionRule {
 
+    private static final int HOLIDAY_SERIES_MIN_LENGTH = 3;
     private static final int LONG_REST = 5;
 
     LongRestRule(Planning planning) {
@@ -38,7 +39,7 @@ class LongRestRule extends PlanningBasedSatisfactionRule {
                 if (areConsecutive(lastHolidayDay, currentHolidayDay)) {
                     currentSerieCount++;
                 } else {
-                    if (currentSerieCount >= 3) {
+                    if (currentSerieCount >= HOLIDAY_SERIES_MIN_LENGTH) {
                         totalSeriesFound++;
                     }
                     currentSerieCount = 0;
@@ -50,6 +51,6 @@ class LongRestRule extends PlanningBasedSatisfactionRule {
     }
 
     private boolean areConsecutive(int yesterday, int today) {
-        return yesterday == (today + 1);
+        return (yesterday + 1) == today;
     }
 }
