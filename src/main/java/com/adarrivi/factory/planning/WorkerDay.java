@@ -18,12 +18,12 @@ public class WorkerDay {
         this.line = line;
     }
 
-    public static WorkerDay createWorkDay(int day, ShiftType shiftType, String line) {
+    private static WorkerDay createWorkDay(int day, ShiftType shiftType, String line) {
         return new WorkerDay(day, shiftType, line);
     }
 
     public static WorkerDay createEmptyDay(int day) {
-        return new WorkerDay(day, ShiftType.EMPTY, EMPTY_STRING);
+        return new WorkerDay(day, ShiftType.FREE, EMPTY_STRING);
     }
 
     public static List<WorkerDay> createAllShiftsForDay(int day, String line) {
@@ -31,10 +31,6 @@ public class WorkerDay {
         shifts.add(WorkerDay.createWorkDay(day, ShiftType.MORNING, line));
         shifts.add(WorkerDay.createWorkDay(day, ShiftType.AFTERNOON, line));
         return shifts;
-    }
-
-    public static WorkerDay createHoliday(int day) {
-        return new WorkerDay(day, ShiftType.HOLIDAY, EMPTY_STRING);
     }
 
     public int getDay() {
@@ -58,12 +54,21 @@ public class WorkerDay {
         this.shiftType = shiftType;
     }
 
+    void setHoliday() {
+        this.shiftType = ShiftType.HOLIDAY;
+        this.line = EMPTY_STRING;
+    }
+
     boolean isHoliday() {
         return ShiftType.HOLIDAY.equals(shiftType);
     }
 
     boolean isWorkingDay() {
         return ShiftType.MORNING.equals(shiftType) || ShiftType.AFTERNOON.equals(shiftType);
+    }
+
+    boolean isFree() {
+        return ShiftType.FREE.equals(shiftType);
     }
 
     @Override

@@ -8,18 +8,13 @@ public class PlanningProblemProperties {
     private static final double DEFAULT_MUTATION_PERCENT = 0.1;
     private static final double DEFAULT_PERCENT_TO_MATE = 0.24;
     private static final double DEFAULT_MATING_POPULATION_PERCENT = 0.5;
-    private static final int DEFAULT_MAX_SAME_SOLUTION = 50;
-    private static final int DEFAULT_CROSSOVER_SLICES = 3;
+    private static final int DEFAULT_MAX_SAME_SOLUTION = 20;
+    private static final int DEFAULT_CROSSOVER_SLICES = 5;
 
-    private int allowedHolidays;
     private Planning planning;
 
     public void setPrefferedPlanning(Planning prefferedPlanning) {
         planning = prefferedPlanning;
-    }
-
-    public void setAllowedHolidays(int allowedHolidays) {
-        this.allowedHolidays = allowedHolidays;
     }
 
     public double getMutationPercent() {
@@ -48,10 +43,6 @@ public class PlanningProblemProperties {
 
     public Planning getPlanning() {
         return planning;
-    }
-
-    public int getAllowedHolidays() {
-        return allowedHolidays;
     }
 
 }

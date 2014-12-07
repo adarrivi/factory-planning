@@ -8,7 +8,7 @@ import com.adarrivi.factory.planning.WorkerDay;
 
 class HolidayPreferenceRule extends PlanningBasedSatisfactionRule {
 
-    private static final int RESPECT_HOLIDAY_PREFERENCE = 4;
+    private static final int RESPECT_HOLIDAY_PREFERENCE_REWARD = 4;
 
     HolidayPreferenceRule(Planning planning) {
         super(planning);
@@ -24,6 +24,6 @@ class HolidayPreferenceRule extends PlanningBasedSatisfactionRule {
         List<WorkerDay> holidayPreferences = worker.getHolidayPreferences();
         List<WorkerDay> holidays = worker.getHolidays();
         long preferencesFulfilled = holidayPreferences.stream().filter(holidays::contains).count();
-        score += preferencesFulfilled * RESPECT_HOLIDAY_PREFERENCE;
+        score += preferencesFulfilled * RESPECT_HOLIDAY_PREFERENCE_REWARD;
     }
 }

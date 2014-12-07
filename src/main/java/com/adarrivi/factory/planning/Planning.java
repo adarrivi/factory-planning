@@ -15,8 +15,10 @@ public class Planning implements CalculateGenomeScore {
     private List<String> allLines = new ArrayList<>();
     private List<Worker> allWorkers = new ArrayList<>();
     private List<Integer> allDays = new ArrayList<>();
+    private int maxAllowedHolidays;
 
-    public Planning(List<String> allLines, List<Worker> allWorkers, List<Integer> allDays) {
+    public Planning(int maxAllowedHolidays, List<String> allLines, List<Worker> allWorkers, List<Integer> allDays) {
+        this.maxAllowedHolidays = maxAllowedHolidays;
         this.allLines = allLines;
         this.allWorkers = allWorkers;
         this.allDays = allDays;
@@ -28,6 +30,10 @@ public class Planning implements CalculateGenomeScore {
 
     public List<String> getAllLines() {
         return allLines;
+    }
+
+    public int getMaxAllowedHolidays() {
+        return maxAllowedHolidays;
     }
 
     @Override
@@ -71,16 +77,13 @@ public class Planning implements CalculateGenomeScore {
         return allLines.stream().flatMap(line -> WorkerDay.createAllShiftsForDay(day, line).stream()).collect(Collectors.toList());
     }
 
-    List<WorkerDay> getMissingShifts(int day) {
-        List<WorkerDay> allWorkingShiftsRequired = getAllWorkingShiftsRequired(day);
-        List<WorkerDay> allWorkingShifts = getAllWorkingShifts(day);
-        allWorkingShiftsRequired.removeAll(allWorkingShifts);
-        return allWorkingShiftsRequired;
+    List<Worker> getWorkersThatCanWorkOn(WorkerDay workerDay) {
+        return allWorkers.stream().filter(worker -> worker.canWorkOn(workerDay)).collect(Collectors.toList());
     }
 
     public Planning duplicate() {
         List<Worker> duplicatedWorkers = allWorkers.stream().map(Worker::duplicate).collect(Collectors.toList());
-        return new Planning(allLines, duplicatedWorkers, allDays);
+        return new Planning(maxAllowedHolidays, allLines, duplicatedWorkers, allDays);
     }
 
     @Override

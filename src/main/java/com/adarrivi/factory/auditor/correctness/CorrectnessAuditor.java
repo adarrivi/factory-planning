@@ -17,8 +17,8 @@ public class CorrectnessAuditor {
         this.correctnessRules.add(new AllLinesCoveredRule(planning));
     }
 
-    public boolean isPlanningCorrect() {
-        return !correctnessRules.stream().filter(rule -> !rule.isValid()).findAny().isPresent();
+    public void auditPlanning() {
+        correctnessRules.forEach(CorrectnessRule::assertCorrectness);
     }
 
 }

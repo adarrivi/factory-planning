@@ -14,6 +14,7 @@ public class PlanningTestBuilder {
     private List<Integer> allDays;
     private List<String> allLines;
     private List<Worker> allWorkers = new ArrayList<>();
+    private int maxAllowedHolidays = 4;
 
     public void addWorker(String workerName, List<String> allowedLines, List<WorkerDay> preferences) {
         allWorkers.add(Worker.createWorkerEmptyPlanning(workerName, allowedLines, allDays, preferences));
@@ -28,7 +29,7 @@ public class PlanningTestBuilder {
     }
 
     public Planning build() {
-        return new Planning(allLines, allWorkers, allDays);
+        return new Planning(maxAllowedHolidays, allLines, allWorkers, allDays);
     }
 
 }

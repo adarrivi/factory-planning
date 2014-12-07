@@ -19,6 +19,7 @@ public class GeneticPlanningSolver {
 
     private PlanningProblemProperties problemProperties;
     private GeneticAlgorithm geneticAlgorithm;
+    private Planning bestPlanning;
 
     public GeneticPlanningSolver(PlanningProblemProperties problemProperties) {
         this.problemProperties = problemProperties;
@@ -51,7 +52,7 @@ public class GeneticPlanningSolver {
         population.sort();
     }
 
-    public void solve() {
+    public Planning solve() {
         int sameSolutionCount = 0;
         double lastSolution = Double.MAX_VALUE;
         int iteration = 0;
@@ -68,12 +69,14 @@ public class GeneticPlanningSolver {
             lastSolution = bestScore;
             LOG.debug("Iteration {}, best score {}", iteration, bestScore);
         }
+        Genome bestGenome = geneticAlgorithm.getPopulation().getBest();
+        bestPlanning = (Planning) bestGenome.getOrganism();
         displaySolution();
+        return bestPlanning;
     }
 
     private void displaySolution() {
         Genome bestGenome = geneticAlgorithm.getPopulation().getBest();
-        Planning bestPlanning = (Planning) bestGenome.getOrganism();
         LOG.debug("Best planning found with score {}: \n{}", bestGenome.getScore(), bestPlanning);
     }
 }

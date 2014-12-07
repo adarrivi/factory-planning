@@ -3,52 +3,46 @@ package com.adarrivi.factory.planning;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.stream.Collectors;
 
-import com.adarrivi.factory.auditor.correctness.CorrectnessAuditor;
 import com.adarrivi.factory.problem.PlanningProblemProperties;
 
 public class SensiblePlanningRandomizer {
 
     private static final Random RANDOM = new Random();
 
-    private PlanningProblemProperties problem;
     private Planning planning;
 
     public SensiblePlanningRandomizer(PlanningProblemProperties problem) {
-        this.problem = problem;
         this.planning = problem.getPlanning().duplicate();
     }
 
     public Planning getRandomizedPlaning() {
-        planning.getAllWorkers().forEach(this::randomizeWorker);
-        CorrectnessAuditor correctnessAuditor = new CorrectnessAuditor(planning);
-        correctnessAuditor.isPlanningCorrect();
+        planning.getAllDays().forEach(this::setUpRequiredWorkShifts);
+        planning.getAllWorkers().forEach(this::setUpHolidays);
         return planning;
     }
 
-    private void randomizeWorker(Worker worker) {
-        int holidaysLeft = problem.getAllowedHolidays();
-        for (WorkerDay day : worker.getAllWorkerDays()) {
-            boolean includingHolidays = holidaysLeft > 0;
-            Optional<WorkerDay> randomLineShift = getValidRandomLineShift(day.getDay(), worker, includingHolidays);
-            if (randomLineShift.isPresent()) {
-                WorkerDay shift = randomLineShift.get();
-                day.setShift(shift.getLine(), shift.getShiftType());
-                if (day.isHoliday()) {
-                    holidaysLeft--;
-                }
+    private void setUpRequiredWorkShifts(int day) {
+        List<WorkerDay> requiredWorkingShifts = planning.getAllWorkingShiftsRequired(day);
+        for (WorkerDay requiredDay : requiredWorkingShifts) {
+            List<Worker> workersAvailable = planning.getWorkersThatCanWorkOn(requiredDay);
+            Optional<Worker> randomWorker = getRandomElement(workersAvailable);
+            if (randomWorker.isPresent()) {
+                randomWorker.get().setShift(requiredDay.getDay(), requiredDay.getLine(), requiredDay.getShiftType());
             }
         }
     }
 
-    private Optional<WorkerDay> getValidRandomLineShift(int day, Worker worker, boolean includingHolidays) {
-        List<WorkerDay> missingShifts = planning.getMissingShifts(day).stream()
-                .filter(workerDay -> worker.getAllowedLines().contains(workerDay.getLine())).collect(Collectors.toList());
-        if (includingHolidays) {
-            missingShifts.add(WorkerDay.createHoliday(day));
+    private void setUpHolidays(Worker worker) {
+        List<WorkerDay> freeDays = worker.getFreeDays();
+        for (int i = 0; i < planning.getMaxAllowedHolidays(); i++) {
+            Optional<WorkerDay> randomElement = getRandomElement(freeDays);
+            if (randomElement.isPresent()) {
+                WorkerDay newHoliday = randomElement.get();
+                newHoliday.setHoliday();
+                freeDays.remove(newHoliday);
+            }
         }
-        return getRandomElement(missingShifts);
     }
 
     private <T> Optional<T> getRandomElement(List<T> elementList) {

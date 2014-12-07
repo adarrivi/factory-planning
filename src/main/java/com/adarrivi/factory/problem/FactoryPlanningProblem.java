@@ -1,5 +1,7 @@
 package com.adarrivi.factory.problem;
 
+import com.adarrivi.factory.planning.Planning;
+
 public class FactoryPlanningProblem {
 
     private PlanningProblemProperties problemProperties;
@@ -14,8 +16,9 @@ public class FactoryPlanningProblem {
         problemSolver.init();
     }
 
-    public void solve() {
-        problemSolver.solve();
+    public Planning solve() {
+        return problemSolver.solve();
+
     }
 
 }

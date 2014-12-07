@@ -9,6 +9,7 @@ public class Worker {
 
     private static final Predicate<WorkerDay> HOLIDAY_ONLY_PREDICATE = (day) -> day.isHoliday();
     private static final Predicate<WorkerDay> WORKING_ONLY_PREDICATE = (day) -> day.isWorkingDay();
+    private static final Predicate<WorkerDay> FREE_ONLY_PREDICATE = (day) -> day.isFree();
 
     private String name;
     private List<String> allowedLines = new ArrayList<>();
@@ -31,14 +32,6 @@ public class Worker {
 
     public String getName() {
         return name;
-    }
-
-    List<WorkerDay> getAllWorkerDays() {
-        return workDays;
-    }
-
-    List<String> getAllowedLines() {
-        return allowedLines;
     }
 
     public WorkerDay getDay(int day) {
@@ -65,14 +58,21 @@ public class Worker {
         return filterDays(workDays, WORKING_ONLY_PREDICATE);
     }
 
+    public List<WorkerDay> getFreeDays() {
+        return filterDays(workDays, FREE_ONLY_PREDICATE);
+    }
+
     public Worker duplicate() {
         List<WorkerDay> duplicatedWorkerDays = workDays.stream().map(WorkerDay::duplicate).collect(Collectors.toList());
         return new Worker(name, allowedLines, duplicatedWorkerDays, prefferedDays);
     }
 
     void setShift(int day, String line, ShiftType shiftType) {
-        WorkerDay workingDay = workDays.stream().filter(workDay -> workDay.getDay() == day).findAny().get();
-        workingDay.setShift(line, shiftType);
+        getDay(day).setShift(line, shiftType);
+    }
+
+    public boolean canWorkOn(WorkerDay day) {
+        return allowedLines.contains(day.getLine()) && getDay(day.getDay()).isFree();
     }
 
     @Override

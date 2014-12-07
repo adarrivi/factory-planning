@@ -8,7 +8,7 @@ import com.adarrivi.factory.planning.WorkerDay;
 
 class LongRestRule extends PlanningBasedSatisfactionRule {
 
-    private static final int HOLIDAY_SERIES_MIN_LENGTH = 3;
+    private static final int HOLIDAY_SERIES_MIN_LENGTH_REWARD = 3;
     private static final int LONG_REST = 5;
 
     LongRestRule(Planning planning) {
@@ -39,7 +39,7 @@ class LongRestRule extends PlanningBasedSatisfactionRule {
                 if (areConsecutive(lastHolidayDay, currentHolidayDay)) {
                     currentSerieCount++;
                 } else {
-                    if (currentSerieCount >= HOLIDAY_SERIES_MIN_LENGTH) {
+                    if (currentSerieCount >= HOLIDAY_SERIES_MIN_LENGTH_REWARD) {
                         totalSeriesFound++;
                     }
                     currentSerieCount = 0;
