@@ -7,7 +7,7 @@ public class PlanningProblemProperties {
 
     private Planning planning;
     private AnnealingTemperature initialTemperature;
-    private int maxIterationsBeforeGivingUp = 30;
+    private int maxIterationsBeforeGivingUp = 3;
     private double acceptableScore = 10000;
 
     public PlanningProblemProperties(AnnealingTemperature initialTemperature) {

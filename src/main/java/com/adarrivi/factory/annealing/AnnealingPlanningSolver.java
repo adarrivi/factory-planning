@@ -40,10 +40,16 @@ public class AnnealingPlanningSolver {
     private void calculateCurrentIterationScore() {
         currentPlanning = problemProperties.getPlanning().duplicate();
         SensiblePlanningRandomizer randomizer = new SensiblePlanningRandomizer(currentPlanning, temperature);
-        currentPlanning = randomizer.randomizePlanning();
-        SatisfactionAuditor auditor = new SatisfactionAuditor(currentPlanning);
-        auditor.auditPlanning();
-        currentScore = auditor.getScore();
+        try {
+            currentPlanning = randomizer.randomizePlanning();
+            SatisfactionAuditor auditor = new SatisfactionAuditor(currentPlanning);
+            auditor.auditPlanning();
+            currentScore = auditor.getScore();
+        } catch (ImpossibleToSolveException ex) {
+            LOGGER.debug("No solution found for temperature {}, iteration {}: {}", temperature.getRandomDays(),
+                    iterationsAtSameTemperature, ex.getMessage());
+            currentScore = Double.MAX_VALUE;
+        }
     }
 
     private void stepProcess() {

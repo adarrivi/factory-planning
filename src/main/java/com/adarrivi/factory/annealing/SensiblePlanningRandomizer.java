@@ -1,16 +1,13 @@
 package com.adarrivi.factory.annealing;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.Random;
 
 import com.adarrivi.factory.planning.Planning;
 import com.adarrivi.factory.planning.Worker;
 import com.adarrivi.factory.planning.WorkerDay;
 
 public class SensiblePlanningRandomizer {
-
-    private static final Random RANDOM = new Random();
 
     private Planning planning;
     private AnnealingTemperature temperature;
@@ -21,9 +18,9 @@ public class SensiblePlanningRandomizer {
     }
 
     public Planning randomizePlanning() {
-        for (int i = 0; i < temperature.getRandomDays(); i++) {
-            Optional<Integer> randomDay = getRandomElement(planning.getAllDays());
-            setUpRequiredWorkShifts(randomDay.get());
+        List<Integer> randomDays = getRandomElements(temperature.getRandomDays(), planning.getAllDays());
+        for (int randomDay : randomDays) {
+            setUpRequiredWorkShifts(randomDay);
         }
         planning.getAllWorkers().forEach(this::setUpHolidays);
         return planning;
@@ -33,29 +30,28 @@ public class SensiblePlanningRandomizer {
         List<WorkerDay> requiredWorkingShifts = planning.getAllWorkingShiftsRequired(day);
         for (WorkerDay requiredDay : requiredWorkingShifts) {
             List<Worker> workersAvailable = planning.getWorkersThatCanWorkOn(requiredDay);
-            Optional<Worker> randomWorker = getRandomElement(workersAvailable);
-            if (randomWorker.isPresent()) {
-                randomWorker.get().setShift(requiredDay.getDay(), requiredDay.getLine(), requiredDay.getShiftType());
+
+            List<Worker> randomWorkers = getRandomElements(1, workersAvailable);
+            if (!randomWorkers.isEmpty()) {
+                randomWorkers.get(0).setShift(requiredDay.getDay(), requiredDay.getLine(), requiredDay.getShiftType());
+            } else {
+                throw new ImpossibleToSolveException("Cannot find a suitable worker for the day " + day + ": " + planning);
             }
         }
     }
 
     private void setUpHolidays(Worker worker) {
-        List<WorkerDay> freeDays = worker.getFreeDays();
-        for (int i = 0; i < planning.getMaxAllowedHolidays(); i++) {
-            Optional<WorkerDay> randomElement = getRandomElement(freeDays);
-            if (randomElement.isPresent()) {
-                WorkerDay newHoliday = randomElement.get();
-                newHoliday.setHoliday();
-                freeDays.remove(newHoliday);
-            }
+        List<WorkerDay> allowedHolidays = getRandomElements(planning.getMaxAllowedHolidays(), worker.getFreeDays());
+        for (WorkerDay holiday : allowedHolidays) {
+            holiday.setHoliday();
         }
     }
 
-    private <T> Optional<T> getRandomElement(List<T> elementList) {
-        if (elementList.isEmpty()) {
-            return Optional.empty();
+    private <T> List<T> getRandomElements(int maxElements, List<T> list) {
+        Collections.shuffle(list);
+        if (list.size() <= maxElements) {
+            return list;
         }
-        return Optional.of(elementList.get(RANDOM.nextInt(elementList.size())));
+        return list.subList(0, maxElements);
     }
 }
