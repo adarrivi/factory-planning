@@ -67,7 +67,7 @@ public class Worker {
         return new Worker(name, allowedLines, duplicatedWorkerDays, prefferedDays);
     }
 
-    void setShift(int day, String line, ShiftType shiftType) {
+    public void setShift(int day, String line, ShiftType shiftType) {
         getDay(day).setShift(line, shiftType);
     }
 

@@ -3,6 +3,8 @@ package com.adarrivi.factory.problem;
 import java.util.Arrays;
 import java.util.Collections;
 
+import com.adarrivi.factory.annealing.AnnealingTemperature;
+
 public class DefaultPlanningTestProblem {
 
     private static final int PLANNING_DAYS = 14;
@@ -25,7 +27,7 @@ public class DefaultPlanningTestProblem {
         builder.addWorker("I", Arrays.asList(L2), Collections.emptyList());
         builder.addWorker("J", Arrays.asList(L3), Collections.emptyList());
         builder.addWorker("K", Arrays.asList(L1), Collections.emptyList());
-        PlanningProblemProperties problem = new PlanningProblemProperties();
+        PlanningProblemProperties problem = new PlanningProblemProperties(new AnnealingTemperature(PLANNING_DAYS));
         problem.setPrefferedPlanning(builder.build());
         return problem;
     }

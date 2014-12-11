@@ -5,12 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.encog.ml.genetic.genome.CalculateGenomeScore;
-import org.encog.ml.genetic.genome.Genome;
-
-import com.adarrivi.factory.auditor.satisfaction.SatisfactionAuditor;
-
-public class Planning implements CalculateGenomeScore {
+public class Planning {
 
     private List<String> allLines = new ArrayList<>();
     private List<Worker> allWorkers = new ArrayList<>();
@@ -24,28 +19,12 @@ public class Planning implements CalculateGenomeScore {
         this.allDays = allDays;
     }
 
-    public int getPlanningSize() {
-        return allDays.size() * allDays.size();
-    }
-
     public List<String> getAllLines() {
         return allLines;
     }
 
     public int getMaxAllowedHolidays() {
         return maxAllowedHolidays;
-    }
-
-    @Override
-    public double calculateScore(Genome genome) {
-        SatisfactionAuditor auditor = new SatisfactionAuditor((Planning) genome.getOrganism());
-        auditor.auditPlanning();
-        return auditor.getScore();
-    }
-
-    @Override
-    public boolean shouldMinimize() {
-        return true;
     }
 
     public List<Worker> getAllWorkers() {
@@ -73,11 +52,11 @@ public class Planning implements CalculateGenomeScore {
         return getAllWorkers().stream().map(aWorker -> aWorker.getDay(day));
     }
 
-    List<WorkerDay> getAllWorkingShiftsRequired(int day) {
+    public List<WorkerDay> getAllWorkingShiftsRequired(int day) {
         return allLines.stream().flatMap(line -> WorkerDay.createAllShiftsForDay(day, line).stream()).collect(Collectors.toList());
     }
 
-    List<Worker> getWorkersThatCanWorkOn(WorkerDay workerDay) {
+    public List<Worker> getWorkersThatCanWorkOn(WorkerDay workerDay) {
         return allWorkers.stream().filter(worker -> worker.canWorkOn(workerDay)).collect(Collectors.toList());
     }
 

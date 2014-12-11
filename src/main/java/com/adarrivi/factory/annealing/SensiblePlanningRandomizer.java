@@ -1,23 +1,30 @@
-package com.adarrivi.factory.planning;
+package com.adarrivi.factory.annealing;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import com.adarrivi.factory.problem.PlanningProblemProperties;
+import com.adarrivi.factory.planning.Planning;
+import com.adarrivi.factory.planning.Worker;
+import com.adarrivi.factory.planning.WorkerDay;
 
 public class SensiblePlanningRandomizer {
 
     private static final Random RANDOM = new Random();
 
     private Planning planning;
+    private AnnealingTemperature temperature;
 
-    public SensiblePlanningRandomizer(PlanningProblemProperties problem) {
-        this.planning = problem.getPlanning().duplicate();
+    public SensiblePlanningRandomizer(Planning planning, AnnealingTemperature temperature) {
+        this.planning = planning;
+        this.temperature = temperature;
     }
 
-    public Planning getRandomizedPlaning() {
-        planning.getAllDays().forEach(this::setUpRequiredWorkShifts);
+    public Planning randomizePlanning() {
+        for (int i = 0; i < temperature.getRandomDays(); i++) {
+            Optional<Integer> randomDay = getRandomElement(planning.getAllDays());
+            setUpRequiredWorkShifts(randomDay.get());
+        }
         planning.getAllWorkers().forEach(this::setUpHolidays);
         return planning;
     }

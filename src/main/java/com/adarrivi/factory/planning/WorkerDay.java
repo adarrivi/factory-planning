@@ -54,7 +54,7 @@ public class WorkerDay {
         this.shiftType = shiftType;
     }
 
-    void setHoliday() {
+    public void setHoliday() {
         this.shiftType = ShiftType.HOLIDAY;
         this.line = EMPTY_STRING;
     }

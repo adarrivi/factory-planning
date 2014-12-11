@@ -21,7 +21,6 @@ public class FactoryPlanningProblemTest {
 
     private void givenProblem() {
         victim = new FactoryPlanningProblem(problem.createDefaultProblem());
-        victim.init();
     }
 
     private void whenSolveProblem() {

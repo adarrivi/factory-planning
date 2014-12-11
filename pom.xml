@@ -8,9 +8,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jdk.version>1.8</jdk.version>
-		<junit.version>4.11</junit.version>
-		<org.encog.version>3.1.0</org.encog.version>
-		<org.slf4j.version>1.7.5</org.slf4j.version>
+		<junit.version>4.12</junit.version>
+		<org.slf4j.version>1.7.7</org.slf4j.version>
 	</properties>
 
 	<dependencies>
@@ -24,15 +23,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${org.slf4j.version}</version>
-		</dependency>
-
-
-
-		<!-- Neural network library -->
-		<dependency>
-			<groupId>org.encog</groupId>
-			<artifactId>encog-core</artifactId>
-			<version>${org.encog.version}</version>
 		</dependency>
 
 		<!-- Testing dependencies -->
