@@ -10,10 +10,10 @@ public class Planning {
     private List<String> allLines = new ArrayList<>();
     private List<Worker> allWorkers = new ArrayList<>();
     private List<Integer> allDays = new ArrayList<>();
-    private int maxAllowedHolidays;
+    private int mandatoryAllowedHolidays;
 
-    public Planning(int maxAllowedHolidays, List<String> allLines, List<Worker> allWorkers, List<Integer> allDays) {
-        this.maxAllowedHolidays = maxAllowedHolidays;
+    public Planning(int mandatoryHolidays, List<String> allLines, List<Worker> allWorkers, List<Integer> allDays) {
+        this.mandatoryAllowedHolidays = mandatoryHolidays;
         this.allLines = allLines;
         this.allWorkers = allWorkers;
         this.allDays = allDays;
@@ -23,8 +23,8 @@ public class Planning {
         return allLines;
     }
 
-    public int getMaxAllowedHolidays() {
-        return maxAllowedHolidays;
+    public int getMandatoryHolidays() {
+        return mandatoryAllowedHolidays;
     }
 
     public List<Worker> getAllWorkers() {
@@ -62,7 +62,7 @@ public class Planning {
 
     public Planning duplicate() {
         List<Worker> duplicatedWorkers = allWorkers.stream().map(Worker::duplicate).collect(Collectors.toList());
-        return new Planning(maxAllowedHolidays, allLines, duplicatedWorkers, allDays);
+        return new Planning(mandatoryAllowedHolidays, allLines, duplicatedWorkers, allDays);
     }
 
     @Override

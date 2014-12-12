@@ -1,5 +1,5 @@
 package com.adarrivi.factory.planning;
 
 public enum ShiftType {
-    MORNING, AFTERNOON, HOLIDAY, FREE;
+    EARLY, LATE, HOLIDAY, FREE;
 }

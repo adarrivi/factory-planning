@@ -23,10 +23,10 @@ class LongRestRule extends PlanningBasedSatisfactionRule {
 
     private void calculateWorkerSatisfaction(Worker worker) {
         List<WorkerDay> holidays = worker.getHolidays();
-        score += count3orMoreConsecutiveSeries(holidays) * LONG_REST;
+        score += countConsecutiveSeries(holidays) * LONG_REST;
     }
 
-    private int count3orMoreConsecutiveSeries(List<WorkerDay> holidays) {
+    private int countConsecutiveSeries(List<WorkerDay> holidays) {
         int totalSeriesFound = 0;
         int currentSerieCount = 0;
         int lastHolidayDay = 0;

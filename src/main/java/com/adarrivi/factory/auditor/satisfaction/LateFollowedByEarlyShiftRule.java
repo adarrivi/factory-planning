@@ -23,7 +23,7 @@ class LateFollowedByEarlyShiftRule extends PlanningBasedSatisfactionRule {
         ShiftType previousShift = ShiftType.FREE;
         for (WorkerDay day : worker.getWorkingDays()) {
             ShiftType currentShift = day.getShiftType();
-            if (ShiftType.AFTERNOON.equals(previousShift) && ShiftType.MORNING.equals(currentShift)) {
+            if (ShiftType.LATE.equals(previousShift) && ShiftType.EARLY.equals(currentShift)) {
                 score += PENALTY;
             }
             previousShift = currentShift;

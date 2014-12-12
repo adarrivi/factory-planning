@@ -29,11 +29,11 @@ class UnAssignedShiftsRule extends PlanningBasedSatisfactionRule {
             score += INCORRECT_SHIFT_PENALTY;
             return;
         }
-        Optional<WorkerDay> morningShift = dayShifts.stream().filter(shift -> ShiftType.MORNING.equals(shift.getShiftType())).findAny();
+        Optional<WorkerDay> morningShift = dayShifts.stream().filter(shift -> ShiftType.EARLY.equals(shift.getShiftType())).findAny();
         if (!morningShift.isPresent()) {
             score += UNASSIGNED_SHIFT_PENALTY;
         }
-        Optional<WorkerDay> afternoonShift = dayShifts.stream().filter(shift -> ShiftType.AFTERNOON.equals(shift.getShiftType())).findAny();
+        Optional<WorkerDay> afternoonShift = dayShifts.stream().filter(shift -> ShiftType.LATE.equals(shift.getShiftType())).findAny();
         if (!afternoonShift.isPresent()) {
             score += UNASSIGNED_SHIFT_PENALTY;
         }

@@ -41,8 +41,11 @@ public class SensiblePlanningRandomizer {
     }
 
     private void setUpHolidays(Worker worker) {
-        List<WorkerDay> allowedHolidays = getRandomElements(planning.getMaxAllowedHolidays(), worker.getFreeDays());
-        for (WorkerDay holiday : allowedHolidays) {
+        List<WorkerDay> holidays = getRandomElements(planning.getMandatoryHolidays(), worker.getFreeDays());
+        if (holidays.size() != planning.getMandatoryHolidays()) {
+            throw new ImpossibleToSolveException("Cannot set the mandatory holidays for the worker " + worker.getName());
+        }
+        for (WorkerDay holiday : holidays) {
             holiday.setHoliday();
         }
     }

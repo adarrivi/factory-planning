@@ -29,6 +29,8 @@ public class AnnealingPlanningSolver {
             calculateCurrentIterationScore();
             stepProcess();
         }
+        LOGGER.debug("Simulated annealing stoped at temperature {}, iteration {}, bestScore {}", temperature.getRandomDays(),
+                iterationsAtSameTemperature, bestScore);
         return bestPlanning;
     }
 
@@ -46,8 +48,8 @@ public class AnnealingPlanningSolver {
             auditor.auditPlanning();
             currentScore = auditor.getScore();
         } catch (ImpossibleToSolveException ex) {
-            LOGGER.debug("No solution found for temperature {}, iteration {}: {}", temperature.getRandomDays(),
-                    iterationsAtSameTemperature, ex.getMessage());
+            // LOGGER.debug("No solution found for temperature {}, iteration {}",
+            // temperature.getRandomDays(), iterationsAtSameTemperature);
             currentScore = Double.MAX_VALUE;
         }
     }
@@ -61,7 +63,6 @@ public class AnnealingPlanningSolver {
             LOGGER.debug("Better score found at temperature {}, iteration {}: {}", temperature.getRandomDays(),
                     iterationsAtSameTemperature, currentScore);
         } else {
-            LOGGER.debug("Nothing new at temperature {}, iteration {}", temperature.getRandomDays(), iterationsAtSameTemperature);
             iterationsAtSameTemperature++;
         }
     }

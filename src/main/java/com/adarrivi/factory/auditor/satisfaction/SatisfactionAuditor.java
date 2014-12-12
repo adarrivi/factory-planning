@@ -21,8 +21,9 @@ public class SatisfactionAuditor {
         this.satisfactionRules.add(new HolidayPreferenceRule(planning));
         this.satisfactionRules.add(new LongRestRule(planning));
         this.satisfactionRules.add(new UnAssignedShiftsRule(planning));
-        this.satisfactionRules.add(new TooManyHolidaysRule(planning));
         this.satisfactionRules.add(new LateFollowedByEarlyShiftRule(planning));
+        this.satisfactionRules.add(new ConsecutiveLateShiftsRule(planning));
+        this.satisfactionRules.add(new FairnessInLateShiftsRule(planning));
     }
 
     public void auditPlanning() {

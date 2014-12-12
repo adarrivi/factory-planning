@@ -28,8 +28,8 @@ public class WorkerDay {
 
     public static List<WorkerDay> createAllShiftsForDay(int day, String line) {
         List<WorkerDay> shifts = new ArrayList<>();
-        shifts.add(WorkerDay.createWorkDay(day, ShiftType.MORNING, line));
-        shifts.add(WorkerDay.createWorkDay(day, ShiftType.AFTERNOON, line));
+        shifts.add(WorkerDay.createWorkDay(day, ShiftType.EARLY, line));
+        shifts.add(WorkerDay.createWorkDay(day, ShiftType.LATE, line));
         return shifts;
     }
 
@@ -64,7 +64,7 @@ public class WorkerDay {
     }
 
     boolean isWorkingDay() {
-        return ShiftType.MORNING.equals(shiftType) || ShiftType.AFTERNOON.equals(shiftType);
+        return ShiftType.EARLY.equals(shiftType) || ShiftType.LATE.equals(shiftType);
     }
 
     boolean isFree() {
