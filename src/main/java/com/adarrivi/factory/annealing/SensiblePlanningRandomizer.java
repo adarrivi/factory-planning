@@ -18,26 +18,41 @@ public class SensiblePlanningRandomizer {
     }
 
     public Planning randomizePlanning() {
-        List<Integer> randomDays = getRandomElements(temperature.getRandomDays(), planning.getAllDays());
-        for (int randomDay : randomDays) {
-            setUpRequiredWorkShifts(randomDay);
-        }
-        planning.getAllWorkers().forEach(this::setUpHolidays);
+        randomizeWorkingDaysAccordingToTemperature();
+        randomizeAllHolidays();
         return planning;
     }
 
-    private void setUpRequiredWorkShifts(int day) {
+    private void randomizeWorkingDaysAccordingToTemperature() {
+        List<Integer> randomDays = getRandomElements(temperature.getRandomDays(), planning.getAllDays());
+        for (int day : randomDays) {
+            clearDayForAllWorkers(day);
+            randomizeDay(day);
+        }
+    }
+
+    private void clearDayForAllWorkers(int day) {
+        planning.getAllWorkers().forEach(worker -> worker.getDay(day).setFree());
+    }
+
+    private void randomizeDay(int day) {
         List<WorkerDay> requiredWorkingShifts = planning.getAllWorkingShiftsRequired(day);
         for (WorkerDay requiredDay : requiredWorkingShifts) {
             List<Worker> workersAvailable = planning.getWorkersThatCanWorkOn(requiredDay);
-
             List<Worker> randomWorkers = getRandomElements(1, workersAvailable);
             if (!randomWorkers.isEmpty()) {
                 randomWorkers.get(0).setShift(requiredDay.getDay(), requiredDay.getLine(), requiredDay.getShiftType());
-            } else {
-                throw new ImpossibleToSolveException("Cannot find a suitable worker for the day " + day + ": " + planning);
             }
         }
+    }
+
+    private void randomizeAllHolidays() {
+        planning.getAllWorkers().forEach(this::cleanUpHolidaysForWorker);
+        planning.getAllWorkers().forEach(this::setUpHolidays);
+    }
+
+    private void cleanUpHolidaysForWorker(Worker worker) {
+        worker.getHolidays().forEach(holiday -> holiday.setFree());
     }
 
     private void setUpHolidays(Worker worker) {

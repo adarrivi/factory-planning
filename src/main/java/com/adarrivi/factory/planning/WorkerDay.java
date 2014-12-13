@@ -62,6 +62,11 @@ public class WorkerDay {
         this.shiftType = shiftType;
     }
 
+    public void setFree() {
+        this.shiftType = ShiftType.FREE;
+        this.line = EMPTY_STRING;
+    }
+
     public void setHoliday() {
         this.shiftType = ShiftType.HOLIDAY;
         this.line = EMPTY_STRING;

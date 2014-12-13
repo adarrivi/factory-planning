@@ -9,8 +9,6 @@ import com.adarrivi.factory.planning.Planning;
 
 public class SatisfactionAuditor {
 
-    private static final double BASIC_SCORE = 10000;
-
     private List<PlanningRule> satisfactionRules;
     private List<ScoreDetails> allRuleScores = new ArrayList<>();
 
@@ -36,7 +34,7 @@ public class SatisfactionAuditor {
         for (ScoreDetails score : allRuleScores) {
             aggregatedScore += score.getScore();
         }
-        return BASIC_SCORE - aggregatedScore;
+        return aggregatedScore;
     }
 
     public List<ScoreDetails> getAllRuleScores() {
