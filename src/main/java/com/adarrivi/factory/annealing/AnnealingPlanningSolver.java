@@ -3,13 +3,14 @@ package com.adarrivi.factory.annealing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.adarrivi.factory.auditor.satisfaction.SatisfactionAuditor;
+import com.adarrivi.factory.auditor.SatisfactionAuditor;
 import com.adarrivi.factory.planning.Planning;
 import com.adarrivi.factory.problem.PlanningProblemProperties;
 
 public class AnnealingPlanningSolver {
 
     private static Logger LOGGER = LoggerFactory.getLogger(AnnealingPlanningSolver.class);
+    private static final int MAX_ITERATION_BEFORE_GIVING_UP = 10000;
 
     private PlanningProblemProperties problemProperties;
     private double currentScore = Double.MAX_VALUE;
@@ -21,10 +22,10 @@ public class AnnealingPlanningSolver {
 
     public AnnealingPlanningSolver(PlanningProblemProperties problemProperties) {
         this.problemProperties = problemProperties;
+        this.temperature = new AnnealingTemperature(problemProperties.getPlanning().getAllDays().size());
     }
 
     public Planning solve() {
-        temperature = problemProperties.getInitialTemperature();
         while (!finalizeCriteriaMet()) {
             calculateCurrentIterationScore();
             stepProcess();
@@ -35,8 +36,8 @@ public class AnnealingPlanningSolver {
     }
 
     private boolean finalizeCriteriaMet() {
-        return currentScore < problemProperties.getAcceptableScore()
-                || iterationsAtSameTemperature > problemProperties.getMaxIterationsBeforeGivingUp() || !temperature.isThereEnergyLeft();
+        return currentScore < problemProperties.getAcceptableScore() || iterationsAtSameTemperature > MAX_ITERATION_BEFORE_GIVING_UP
+                || !temperature.isThereEnergyLeft();
     }
 
     private void calculateCurrentIterationScore() {
@@ -46,7 +47,7 @@ public class AnnealingPlanningSolver {
             currentPlanning = randomizer.randomizePlanning();
             SatisfactionAuditor auditor = new SatisfactionAuditor(currentPlanning);
             auditor.auditPlanning();
-            currentScore = auditor.getScore();
+            currentScore = auditor.getTotalScore();
         } catch (ImpossibleToSolveException ex) {
             // LOGGER.debug("No solution found for temperature {}, iteration {}",
             // temperature.getRandomDays(), iterationsAtSameTemperature);

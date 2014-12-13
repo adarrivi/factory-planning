@@ -18,18 +18,26 @@ public class WorkerDay {
         this.line = line;
     }
 
-    private static WorkerDay createWorkDay(int day, ShiftType shiftType, String line) {
-        return new WorkerDay(day, shiftType, line);
-    }
-
     public static WorkerDay createEmptyDay(int day) {
         return new WorkerDay(day, ShiftType.FREE, EMPTY_STRING);
     }
 
+    public static WorkerDay createHoliday(int day) {
+        return new WorkerDay(day, ShiftType.HOLIDAY, EMPTY_STRING);
+    }
+
+    public static WorkerDay createEarlyShiftPreference(int day) {
+        return new WorkerDay(day, ShiftType.EARLY, EMPTY_STRING);
+    }
+
+    public static WorkerDay createLateShiftPreference(int day) {
+        return new WorkerDay(day, ShiftType.LATE, EMPTY_STRING);
+    }
+
     public static List<WorkerDay> createAllShiftsForDay(int day, String line) {
         List<WorkerDay> shifts = new ArrayList<>();
-        shifts.add(WorkerDay.createWorkDay(day, ShiftType.EARLY, line));
-        shifts.add(WorkerDay.createWorkDay(day, ShiftType.LATE, line));
+        shifts.add(new WorkerDay(day, ShiftType.EARLY, line));
+        shifts.add(new WorkerDay(day, ShiftType.LATE, line));
         return shifts;
     }
 

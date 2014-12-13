@@ -1,10 +1,10 @@
-package com.adarrivi.factory.auditor.satisfaction;
+package com.adarrivi.factory.auditor.rule;
 
 import com.adarrivi.factory.planning.Planning;
 import com.adarrivi.factory.planning.ShiftType;
 import com.adarrivi.factory.planning.Worker;
 
-public class FairnessInLateShiftsRule extends PlanningBasedSatisfactionRule {
+class FairnessInLateShiftsRule extends BasicPlanningRule {
 
     private static final int TOTAL_LATE_SHIFTS = 4;
     private static final int PENALTY = -8;
@@ -14,14 +14,19 @@ public class FairnessInLateShiftsRule extends PlanningBasedSatisfactionRule {
     }
 
     @Override
-    public double calculateSatisfaction() {
-        planning.getAllWorkers().forEach(this::scoreFairnessLatShifts);
-        return score;
+    public int getScorePerOccurrence() {
+        return PENALTY;
     }
 
-    private void scoreFairnessLatShifts(Worker worker) {
+    @Override
+    public int getOccurrences() {
+        planning.getAllWorkers().forEach(this::countFairnessLatShifts);
+        return occurrences;
+    }
+
+    private void countFairnessLatShifts(Worker worker) {
         long lateShifts = worker.getWorkingDays().stream().filter(day -> ShiftType.LATE.equals(day.getShiftType())).count();
-        score += Math.abs(TOTAL_LATE_SHIFTS - lateShifts) * PENALTY;
+        occurrences += Math.abs(TOTAL_LATE_SHIFTS - lateShifts);
     }
 
 }

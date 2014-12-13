@@ -1,4 +1,4 @@
-package com.adarrivi.factory.auditor.satisfaction;
+package com.adarrivi.factory.auditor.rule;
 
 import java.util.List;
 
@@ -6,27 +6,32 @@ import com.adarrivi.factory.planning.Planning;
 import com.adarrivi.factory.planning.Worker;
 import com.adarrivi.factory.planning.WorkerDay;
 
-class LongRestRule extends PlanningBasedSatisfactionRule {
+class LongRestRule extends BasicPlanningRule {
 
-    private static final int HOLIDAY_SERIES_MIN_LENGTH_REWARD = 3;
-    private static final int LONG_REST = 5;
+    private static final int REWARD = 5;
+    private static final int LONG_REST = 3;
 
     LongRestRule(Planning planning) {
         super(planning);
     }
 
     @Override
-    public double calculateSatisfaction() {
-        planning.getAllWorkers().forEach(this::calculateWorkerSatisfaction);
-        return score;
+    public int getScorePerOccurrence() {
+        return REWARD;
     }
 
-    private void calculateWorkerSatisfaction(Worker worker) {
+    @Override
+    public int getOccurrences() {
+        planning.getAllWorkers().forEach(this::countConsecutiveLongHolidays);
+        return occurrences;
+    }
+
+    private void countConsecutiveLongHolidays(Worker worker) {
         List<WorkerDay> holidays = worker.getHolidays();
-        score += countConsecutiveSeries(holidays) * LONG_REST;
+        occurrences += countConsecutiveHolidaySeries(holidays);
     }
 
-    private int countConsecutiveSeries(List<WorkerDay> holidays) {
+    private int countConsecutiveHolidaySeries(List<WorkerDay> holidays) {
         int totalSeriesFound = 0;
         int currentSerieCount = 0;
         int lastHolidayDay = 0;
@@ -39,7 +44,7 @@ class LongRestRule extends PlanningBasedSatisfactionRule {
                 if (areConsecutive(lastHolidayDay, currentHolidayDay)) {
                     currentSerieCount++;
                 } else {
-                    if (currentSerieCount >= HOLIDAY_SERIES_MIN_LENGTH_REWARD) {
+                    if (currentSerieCount >= LONG_REST) {
                         totalSeriesFound++;
                     }
                     currentSerieCount = 0;

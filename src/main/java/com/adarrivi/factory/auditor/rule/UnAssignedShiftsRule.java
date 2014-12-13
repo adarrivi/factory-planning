@@ -1,4 +1,4 @@
-package com.adarrivi.factory.auditor.satisfaction;
+package com.adarrivi.factory.auditor.rule;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,14 +8,23 @@ import com.adarrivi.factory.planning.Planning;
 import com.adarrivi.factory.planning.ShiftType;
 import com.adarrivi.factory.planning.WorkerDay;
 
-class UnAssignedShiftsRule extends PlanningBasedSatisfactionRule {
-    private static final int SHIFTS_PER_DAY = 2;
+class UnAssignedShiftsRule extends BasicPlanningRule {
 
-    private static final int UNASSIGNED_SHIFT_PENALTY = -20;
-    private static final int INCORRECT_SHIFT_PENALTY = -2000;
+    private static final int PENALTY = -20;
 
     UnAssignedShiftsRule(Planning planning) {
         super(planning);
+    }
+
+    @Override
+    public int getScorePerOccurrence() {
+        return PENALTY;
+    }
+
+    @Override
+    public int getOccurrences() {
+        planning.getAllLines().forEach(line -> checkMissingShifts(line));
+        return occurrences;
     }
 
     private void checkMissingShifts(String line) {
@@ -25,24 +34,13 @@ class UnAssignedShiftsRule extends PlanningBasedSatisfactionRule {
     private void checkMissingShiftForDay(String line, int day) {
         List<WorkerDay> dayShifts = planning.getAllWorkingShifts(day).stream().filter(shift -> shift.getLine().equals(line))
                 .collect(Collectors.toList());
-        if (dayShifts.size() > SHIFTS_PER_DAY) {
-            score += INCORRECT_SHIFT_PENALTY;
-            return;
-        }
         Optional<WorkerDay> morningShift = dayShifts.stream().filter(shift -> ShiftType.EARLY.equals(shift.getShiftType())).findAny();
         if (!morningShift.isPresent()) {
-            score += UNASSIGNED_SHIFT_PENALTY;
+            occurrences++;
         }
         Optional<WorkerDay> afternoonShift = dayShifts.stream().filter(shift -> ShiftType.LATE.equals(shift.getShiftType())).findAny();
         if (!afternoonShift.isPresent()) {
-            score += UNASSIGNED_SHIFT_PENALTY;
+            occurrences++;
         }
     }
-
-    @Override
-    public double calculateSatisfaction() {
-        planning.getAllLines().forEach(line -> checkMissingShifts(line));
-        return score;
-    }
-
 }

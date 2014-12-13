@@ -1,4 +1,4 @@
-package com.adarrivi.factory.auditor.satisfaction;
+package com.adarrivi.factory.auditor.rule;
 
 import java.util.List;
 
@@ -6,24 +6,30 @@ import com.adarrivi.factory.planning.Planning;
 import com.adarrivi.factory.planning.Worker;
 import com.adarrivi.factory.planning.WorkerDay;
 
-class HolidayPreferenceRule extends PlanningBasedSatisfactionRule {
+class HolidayPreferenceRule extends BasicPlanningRule {
 
-    private static final int RESPECT_HOLIDAY_PREFERENCE_REWARD = 4;
+    private static final int REWARD = 4;
 
     HolidayPreferenceRule(Planning planning) {
         super(planning);
     }
 
     @Override
-    public double calculateSatisfaction() {
-        planning.getAllWorkers().forEach(this::calculateWorkerSatisfaction);
-        return score;
+    public int getScorePerOccurrence() {
+        return REWARD;
     }
 
-    private void calculateWorkerSatisfaction(Worker worker) {
+    @Override
+    public int getOccurrences() {
+        planning.getAllWorkers().forEach(this::countHolidayPreferencesFulfilled);
+        return occurrences;
+    }
+
+    private void countHolidayPreferencesFulfilled(Worker worker) {
         List<WorkerDay> holidayPreferences = worker.getHolidayPreferences();
         List<WorkerDay> holidays = worker.getHolidays();
         long preferencesFulfilled = holidayPreferences.stream().filter(holidays::contains).count();
-        score += preferencesFulfilled * RESPECT_HOLIDAY_PREFERENCE_REWARD;
+        occurrences += preferencesFulfilled;
     }
+
 }
