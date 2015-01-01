@@ -1,5 +1,7 @@
 package com.adarrivi.factory.annealing;
 
+import java.util.Observable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,28 +9,28 @@ import com.adarrivi.factory.auditor.SatisfactionAuditor;
 import com.adarrivi.factory.planning.Planning;
 import com.adarrivi.factory.problem.PlanningProblemProperties;
 
-public class AnnealingPlanningSolver {
+public class AnnealingPlanningSolver extends Observable {
 
     private static Logger LOGGER = LoggerFactory.getLogger(AnnealingPlanningSolver.class);
     private static final int MAX_ITERATION_BEFORE_GIVING_UP = 3000;
 
     private PlanningProblemProperties problemProperties;
-    private double currentScore = Double.NEGATIVE_INFINITY;
-    private double bestScore = Double.NEGATIVE_INFINITY;
+    private double currentScore;
+    private double bestScore;
     private Planning bestPlanning;
     private Planning currentPlanning;
-    private int iterationsAtSameTemperature = 0;
+    private int iterationsAtSameTemperature;
     private AnnealingTemperature temperature;
 
-    private int goodSolutionsCreated = 0;
-    private int badSolutionsCreated = 0;
+    private int goodSolutionsCreated;
+    private int badSolutionsCreated;
 
     public AnnealingPlanningSolver(PlanningProblemProperties problemProperties) {
         this.problemProperties = problemProperties;
-        this.temperature = new AnnealingTemperature(problemProperties.getPlanning().getAllDays().size());
     }
 
     public Planning solve() {
+        initialize();
         // Initial planning
         bestPlanning = problemProperties.getPlanning().duplicate();
         while (!finalizeCriteriaMet()) {
@@ -38,7 +40,24 @@ public class AnnealingPlanningSolver {
         LOGGER.debug("Simulated annealing stoped at temperature {}, iteration {}, bestScore {}", temperature.getRandomDays(),
                 iterationsAtSameTemperature, bestScore);
         LOGGER.debug("Good solutions: {}, bad ones {}", goodSolutionsCreated, badSolutionsCreated);
+        notifySolutionFound();
         return bestPlanning;
+    }
+
+    private void initialize() {
+        currentScore = Double.NEGATIVE_INFINITY;
+        bestScore = Double.NEGATIVE_INFINITY;
+        bestPlanning = null;
+        currentPlanning = null;
+        iterationsAtSameTemperature = 0;
+        temperature = new AnnealingTemperature(problemProperties.getPlanning().getAllDays().size());
+        goodSolutionsCreated = 0;
+        badSolutionsCreated = 0;
+    }
+
+    private void notifySolutionFound() {
+        setChanged();
+        notifyObservers(bestPlanning);
     }
 
     private boolean finalizeCriteriaMet() {

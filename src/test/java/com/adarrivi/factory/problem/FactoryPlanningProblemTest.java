@@ -16,7 +16,7 @@ public class FactoryPlanningProblemTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(FactoryPlanningProblemTest.class);
 
     private FactoryPlanningProblem victim;
-    private DefaultPlanningTestProblem problem = new DefaultPlanningTestProblem();
+    private DefaultPlanningProblem problem = new DefaultPlanningProblem();
 
     private Planning bestPlanning;
 

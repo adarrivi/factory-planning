@@ -7,14 +7,14 @@ import org.slf4j.LoggerFactory;
 import com.adarrivi.factory.annealing.AnnealingTemperature;
 import com.adarrivi.factory.annealing.SensiblePlanningRandomizer;
 import com.adarrivi.factory.auditor.correctness.CorrectnessAuditor;
-import com.adarrivi.factory.problem.DefaultPlanningTestProblem;
+import com.adarrivi.factory.problem.DefaultPlanningProblem;
 
 public class SensiblePlanningRandomizerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SensiblePlanningRandomizerTest.class);
 
     private SensiblePlanningRandomizer victim;
-    private DefaultPlanningTestProblem problem = new DefaultPlanningTestProblem();
+    private DefaultPlanningProblem problem = new DefaultPlanningProblem();
 
     @Test
     public void randomize() {

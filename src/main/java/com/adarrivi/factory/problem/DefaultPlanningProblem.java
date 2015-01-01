@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 import com.adarrivi.factory.planning.WorkerDay;
 
-public class DefaultPlanningTestProblem {
+public class DefaultPlanningProblem {
 
     private static final int PLANNING_DAYS = 14;
     private static final String L1 = "L1";
