@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 public class PlanningSwingPanel extends JFrame {
-    private static final int PLANNING_SIZE = 300;
+    private static final int PLANNING_SIZE = 800;
     private static final long serialVersionUID = 1L;
     private static final PlanningSwingPanel INSTANCE = new PlanningSwingPanel();
 
@@ -24,7 +24,7 @@ public class PlanningSwingPanel extends JFrame {
 
     private void createPanel() {
         setTitle("Factory Planning");
-        Rectangle dialogPos = new Rectangle(100, 100, 300 + X_OFFSET, PLANNING_SIZE + Y_OFFSET);
+        Rectangle dialogPos = new Rectangle(100, 100, PLANNING_SIZE + X_OFFSET, PLANNING_SIZE + Y_OFFSET);
 
         setBounds(dialogPos);
         setLocationRelativeTo(null);

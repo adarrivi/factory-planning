@@ -72,7 +72,7 @@ public class WorkerDay {
         this.line = EMPTY_STRING;
     }
 
-    boolean isHoliday() {
+    public boolean isHoliday() {
         return ShiftType.HOLIDAY.equals(shiftType);
     }
 
@@ -80,7 +80,7 @@ public class WorkerDay {
         return ShiftType.EARLY.equals(shiftType) || ShiftType.LATE.equals(shiftType);
     }
 
-    boolean isFree() {
+    public boolean isFree() {
         return ShiftType.FREE.equals(shiftType);
     }
 

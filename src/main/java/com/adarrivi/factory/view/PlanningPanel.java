@@ -2,6 +2,7 @@ package com.adarrivi.factory.view;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -10,51 +11,75 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import com.adarrivi.factory.planning.Planning;
+import com.adarrivi.factory.planning.Worker;
+import com.adarrivi.factory.planning.WorkerDay;
 
 public class PlanningPanel extends JPanel implements Observer {
     private static final int BORDER_OFFSET = 20;
     private static final long serialVersionUID = 1L;
 
-    private Graphics drawer;
     private Planning planning;
     private JTable gridTable;
 
-    public PlanningPanel(int mapSize, int xPos, int yPos) {
-        int realPanelSize = (BORDER_OFFSET * 2) + mapSize;
-        String[] columnNames = { "Worker", "Last Name", "Sport", "# of Years", "Vegetarian" };
+    public PlanningPanel(int xPos, int yPos, int width, int height, Planning initialPlanning) {
+        planning = initialPlanning;
+        setBounds(xPos, yPos, (BORDER_OFFSET * 2) + width, (BORDER_OFFSET * 2) + height);
+        createGridPanel();
+    }
 
-        Object[][] data = { { "Kathy", "Smith", "Snowboarding", new Integer(5), new Boolean(false) },
-                { "John", "Doe", "Rowing", new Integer(3), new Boolean(true) },
-                { "Sue", "Black", "Knitting", new Integer(2), new Boolean(false) },
-                { "Jane", "White", "Speed reading", new Integer(20), new Boolean(true) },
-                { "Joe", "Brown", "Pool", new Integer(10), new Boolean(false) } };
-
-        gridTable = new JTable(data, columnNames);
-        gridTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
+    private void createGridPanel() {
+        gridTable = new JTable(planning.getAllWorkers().size() + 1, planning.getAllDays().size() + 1);
+        gridTable.setPreferredScrollableViewportSize(new Dimension(800, 200));
         gridTable.setFillsViewportHeight(true);
-
-        setBounds(xPos, yPos, realPanelSize, realPanelSize);
-
         // Create the scroll pane and add the table to it.
+        drawWorkers();
         JScrollPane scrollPane = new JScrollPane(gridTable);
 
         // Add the scroll pane to this panel.
         add(scrollPane);
+    }
 
+    private void drawWorkers() {
+        drawHeaders();
+        List<Worker> workers = planning.getAllWorkers();
+        List<Integer> allDays = planning.getAllDays();
+        for (int rowIndex = 1; rowIndex <= workers.size(); rowIndex++) {
+            Worker worker = workers.get(rowIndex - 1);
+            gridTable.setValueAt(worker.getName(), rowIndex, 0);
+            for (int columnIndex : allDays) {
+                WorkerDay workerDay = worker.getDay(columnIndex);
+                gridTable.setValueAt(getCellValue(workerDay), rowIndex, columnIndex);
+            }
+        }
+    }
+
+    private void drawHeaders() {
+        gridTable.setValueAt("Workers", 0, 0);
+        List<Integer> allDays = planning.getAllDays();
+        for (int day : allDays) {
+            gridTable.setValueAt("Day " + day, 0, day);
+        }
+    }
+
+    private String getCellValue(WorkerDay workerDay) {
+        if (workerDay.isFree()) {
+            return "F";
+        }
+        if (workerDay.isHoliday()) {
+            return "H";
+        }
+        return workerDay.getLine() + "-" + workerDay.getShiftType().name();
     }
 
     @Override
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
-        drawer = graphics;
     }
-
-    int val;
 
     @Override
     public void update(Observable o, Object currentPlanning) {
         planning = (Planning) currentPlanning;
-        gridTable.setValueAt(val++, 1, 1);
+        drawWorkers();
         repaint();
     }
 

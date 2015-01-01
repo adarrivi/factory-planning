@@ -40,7 +40,7 @@ public class AnnealingPlanningSolver extends Observable {
         LOGGER.debug("Simulated annealing stoped at temperature {}, iteration {}, bestScore {}", temperature.getRandomDays(),
                 iterationsAtSameTemperature, bestScore);
         LOGGER.debug("Good solutions: {}, bad ones {}", goodSolutionsCreated, badSolutionsCreated);
-        notifySolutionFound();
+        notifyBestSolutionFound();
         return bestPlanning;
     }
 
@@ -55,7 +55,7 @@ public class AnnealingPlanningSolver extends Observable {
         badSolutionsCreated = 0;
     }
 
-    private void notifySolutionFound() {
+    private void notifyBestSolutionFound() {
         setChanged();
         notifyObservers(bestPlanning);
     }
@@ -97,6 +97,7 @@ public class AnnealingPlanningSolver extends Observable {
             iterationsAtSameTemperature = 0;
             LOGGER.debug("Better score found at temperature {}, iteration {}: {}", temperature.getRandomDays(),
                     iterationsAtSameTemperature, currentScore);
+            notifyBestSolutionFound();
         } else {
             iterationsAtSameTemperature++;
         }

@@ -12,16 +12,16 @@ import com.adarrivi.factory.problem.PlanningProblemProperties;
 
 public class PlanningContainer extends JPanel {
 
-    private static final int MAP_SIZE = 300;
     private static final long serialVersionUID = 1L;
     private AnnealingPlanningSolver solver;
     private JButton restartButton;
+    private PlanningProblemProperties problem;
 
     public PlanningContainer() {
         setLayout(null);
         setVisible(true);
         DefaultPlanningProblem testProblem = new DefaultPlanningProblem();
-        PlanningProblemProperties problem = testProblem.createDefaultProblem();
+        problem = testProblem.createDefaultProblem();
         solver = new AnnealingPlanningSolver(problem);
     }
 
@@ -40,7 +40,7 @@ public class PlanningContainer extends JPanel {
     }
 
     private void createPlanningPanel() {
-        PlanningPanel planningPanel = new PlanningPanel(MAP_SIZE, 10, 34);
+        PlanningPanel planningPanel = new PlanningPanel(10, 34, 800, 200, problem.getPlanning());
         add(planningPanel);
         solver.addObserver(planningPanel);
     }
