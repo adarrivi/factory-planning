@@ -22,8 +22,7 @@ public class AnnealingPlanningSolver extends Observable {
     private int iterationsAtSameTemperature;
     private AnnealingTemperature temperature;
 
-    private int goodSolutionsCreated;
-    private int badSolutionsCreated;
+    private int planningsCreated;
 
     public AnnealingPlanningSolver(PlanningProblemProperties problemProperties) {
         this.problemProperties = problemProperties;
@@ -39,7 +38,7 @@ public class AnnealingPlanningSolver extends Observable {
         }
         LOGGER.debug("Simulated annealing stoped at temperature {}, iteration {}, bestScore {}", temperature.getRandomDays(),
                 iterationsAtSameTemperature, bestScore);
-        LOGGER.debug("Good solutions: {}, bad ones {}", goodSolutionsCreated, badSolutionsCreated);
+        LOGGER.debug("Plannings created: {}", planningsCreated);
         notifyBestSolutionFound();
         return bestPlanning;
     }
@@ -51,13 +50,12 @@ public class AnnealingPlanningSolver extends Observable {
         currentPlanning = null;
         iterationsAtSameTemperature = 0;
         temperature = new AnnealingTemperature(problemProperties.getPlanning().getAllDays().size());
-        goodSolutionsCreated = 0;
-        badSolutionsCreated = 0;
+        planningsCreated = 0;
     }
 
     private void notifyBestSolutionFound() {
         setChanged();
-        notifyObservers(bestPlanning);
+        notifyObservers(new PlanningSolution(bestPlanning, bestScore, planningsCreated, temperature.getRandomDays()));
     }
 
     private boolean finalizeCriteriaMet() {
@@ -66,18 +64,8 @@ public class AnnealingPlanningSolver extends Observable {
     }
 
     private void calculateCurrentIterationScore() {
-        boolean randomSolutionCreated = false;
-        while (!randomSolutionCreated) {
-            try {
-                createRandomSolution();
-                goodSolutionsCreated++;
-                randomSolutionCreated = true;
-            } catch (ImpossibleToSolveException ex) {
-                badSolutionsCreated++;
-                randomSolutionCreated = false;
-
-            }
-        }
+        createRandomSolution();
+        planningsCreated++;
     }
 
     private void createRandomSolution() {

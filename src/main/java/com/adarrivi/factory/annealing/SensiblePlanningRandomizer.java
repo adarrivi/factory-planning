@@ -18,16 +18,16 @@ public class SensiblePlanningRandomizer {
     }
 
     public Planning randomizePlanning() {
-        randomizeWorkingDaysAccordingToTemperature();
-        randomizeAllHolidays();
+        randomizeDaysAccordingToTemperature();
+        randomizeHolidaysForAllWorkers();
         return planning;
     }
 
-    private void randomizeWorkingDaysAccordingToTemperature() {
+    private void randomizeDaysAccordingToTemperature() {
         List<Integer> randomDays = getRandomElements(temperature.getRandomDays(), planning.getAllDays());
         for (int day : randomDays) {
             clearDayForAllWorkers(day);
-            randomizeDay(day);
+            randomizeDayForAllWorkers(day);
         }
     }
 
@@ -35,7 +35,7 @@ public class SensiblePlanningRandomizer {
         planning.getAllWorkers().forEach(worker -> worker.getDay(day).setFree());
     }
 
-    private void randomizeDay(int day) {
+    private void randomizeDayForAllWorkers(int day) {
         List<WorkerDay> requiredWorkingShifts = planning.getAllWorkingShiftsRequired(day);
         for (WorkerDay requiredDay : requiredWorkingShifts) {
             List<Worker> workersAvailable = planning.getWorkersThatCanWorkOn(requiredDay);
@@ -46,23 +46,18 @@ public class SensiblePlanningRandomizer {
         }
     }
 
-    private void randomizeAllHolidays() {
+    private void randomizeHolidaysForAllWorkers() {
         planning.getAllWorkers().forEach(this::cleanUpHolidaysForWorker);
-        planning.getAllWorkers().forEach(this::setUpHolidays);
+        planning.getAllWorkers().forEach(this::randomizeHolidays);
     }
 
     private void cleanUpHolidaysForWorker(Worker worker) {
         worker.getHolidays().forEach(holiday -> holiday.setFree());
     }
 
-    private void setUpHolidays(Worker worker) {
+    private void randomizeHolidays(Worker worker) {
         List<WorkerDay> holidays = getRandomElements(planning.getMandatoryHolidays(), worker.getFreeDays());
-        if (holidays.size() != planning.getMandatoryHolidays()) {
-            throw new ImpossibleToSolveException("Cannot set the mandatory holidays for the worker " + worker.getName());
-        }
-        for (WorkerDay holiday : holidays) {
-            holiday.setHoliday();
-        }
+        holidays.forEach(WorkerDay::setHoliday);
     }
 
     private <T> List<T> getRandomElements(int maxElements, List<T> list) {

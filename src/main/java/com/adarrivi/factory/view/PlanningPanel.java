@@ -1,15 +1,16 @@
 package com.adarrivi.factory.view;
 
-import java.awt.Dimension;
+import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import com.adarrivi.factory.annealing.PlanningSolution;
 import com.adarrivi.factory.planning.Planning;
 import com.adarrivi.factory.planning.Worker;
 import com.adarrivi.factory.planning.WorkerDay;
@@ -20,23 +21,30 @@ public class PlanningPanel extends JPanel implements Observer {
 
     private Planning planning;
     private JTable gridTable;
+    private JLabel infoLabel;
 
     public PlanningPanel(int xPos, int yPos, int width, int height, Planning initialPlanning) {
         planning = initialPlanning;
+        setLayout(new BorderLayout(0, 0));
         setBounds(xPos, yPos, (BORDER_OFFSET * 2) + width, (BORDER_OFFSET * 2) + height);
         createGridPanel();
+        createInfoLabels();
+    }
+
+    private void createInfoLabels() {
+        JPanel panel = new JPanel();
+        add(panel, BorderLayout.SOUTH);
+
+        infoLabel = new JLabel("...");
+        panel.add(infoLabel);
     }
 
     private void createGridPanel() {
         gridTable = new JTable(planning.getAllWorkers().size() + 1, planning.getAllDays().size() + 1);
-        gridTable.setPreferredScrollableViewportSize(new Dimension(800, 200));
-        gridTable.setFillsViewportHeight(true);
         // Create the scroll pane and add the table to it.
         drawWorkers();
-        JScrollPane scrollPane = new JScrollPane(gridTable);
-
         // Add the scroll pane to this panel.
-        add(scrollPane);
+        add(gridTable, BorderLayout.CENTER);
     }
 
     private void drawWorkers() {
@@ -77,9 +85,12 @@ public class PlanningPanel extends JPanel implements Observer {
     }
 
     @Override
-    public void update(Observable o, Object currentPlanning) {
-        planning = (Planning) currentPlanning;
+    public void update(Observable o, Object currentSolution) {
+        PlanningSolution solution = (PlanningSolution) currentSolution;
+        planning = solution.getPlanning();
         drawWorkers();
+        infoLabel.setText("Best solution with score " + solution.getScore() + ", at temperature: " + solution.getTemperature()
+                + " (plannings created: " + solution.getPlanningsCreatedSoFar() + ")");
         repaint();
     }
 

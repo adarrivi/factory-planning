@@ -71,7 +71,12 @@ public class Worker {
         getDay(day).setShift(line, shiftType);
     }
 
-    public boolean canWorkOn(WorkerDay day) {
+    public boolean canWorkOn(WorkerDay day, int mandatoryHolidays) {
+        if ((getFreeDays().size() + getHolidays().size()) - mandatoryHolidays <= 0) {
+            // No days left for the worker to take the mandatory holidays. It
+            // cannot work more :)
+            return false;
+        }
         return allowedLines.contains(day.getLine()) && getDay(day.getDay()).isFree();
     }
 

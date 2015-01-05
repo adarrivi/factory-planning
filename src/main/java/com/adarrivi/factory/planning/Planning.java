@@ -57,7 +57,7 @@ public class Planning {
     }
 
     public List<Worker> getWorkersThatCanWorkOn(WorkerDay workerDay) {
-        return allWorkers.stream().filter(worker -> worker.canWorkOn(workerDay)).collect(Collectors.toList());
+        return allWorkers.stream().filter(worker -> worker.canWorkOn(workerDay, mandatoryAllowedHolidays)).collect(Collectors.toList());
     }
 
     public Planning duplicate() {
