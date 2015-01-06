@@ -1,4 +1,4 @@
-package com.adarrivi.factory.auditor.rule;
+package com.adarrivi.factory.auditor.satisfaction;
 
 import java.util.List;
 import java.util.stream.Collectors;

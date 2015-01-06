@@ -1,4 +1,4 @@
-package com.adarrivi.factory.auditor.rule;
+package com.adarrivi.factory.auditor.satisfaction;
 
 public interface PlanningRule {
 

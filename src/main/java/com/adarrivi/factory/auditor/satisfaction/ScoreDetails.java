@@ -1,6 +1,5 @@
-package com.adarrivi.factory.auditor;
+package com.adarrivi.factory.auditor.satisfaction;
 
-import com.adarrivi.factory.auditor.rule.PlanningRule;
 
 public class ScoreDetails {
 

@@ -5,7 +5,7 @@ import java.util.Observable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.adarrivi.factory.auditor.SatisfactionAuditor;
+import com.adarrivi.factory.auditor.satisfaction.SatisfactionAuditor;
 import com.adarrivi.factory.planning.Planning;
 import com.adarrivi.factory.problem.PlanningProblemProperties;
 
@@ -28,7 +28,7 @@ public class AnnealingPlanningSolver extends Observable {
         this.problemProperties = problemProperties;
     }
 
-    public Planning solve() {
+    public void solve() {
         initialize();
         // Initial planning
         bestPlanning = problemProperties.getPlanning().duplicate();
@@ -40,7 +40,6 @@ public class AnnealingPlanningSolver extends Observable {
                 iterationsAtSameTemperature, bestScore);
         LOGGER.debug("Plannings created: {}", planningsCreated);
         notifyBestSolutionFound();
-        return bestPlanning;
     }
 
     private void initialize() {

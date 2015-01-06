@@ -1,10 +1,8 @@
-package com.adarrivi.factory.auditor;
+package com.adarrivi.factory.auditor.satisfaction;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.adarrivi.factory.auditor.rule.PlanningRule;
-import com.adarrivi.factory.auditor.rule.RuleFactory;
 import com.adarrivi.factory.planning.Planning;
 
 public class SatisfactionAuditor {
@@ -17,7 +15,14 @@ public class SatisfactionAuditor {
     }
 
     private void setUpRules(Planning planning) {
-        this.satisfactionRules = RuleFactory.createSatisfactionRules(planning);
+        satisfactionRules = new ArrayList<>();
+        satisfactionRules.add(new WorkShiftPreferenceRule(planning));
+        satisfactionRules.add(new HolidayPreferenceRule(planning));
+        satisfactionRules.add(new LongRestRule(planning));
+        satisfactionRules.add(new UnAssignedShiftsRule(planning));
+        satisfactionRules.add(new LateFollowedByEarlyShiftRule(planning));
+        satisfactionRules.add(new ConsecutiveLateShiftsRule(planning));
+        satisfactionRules.add(new FairnessInLateShiftsRule(planning));
     }
 
     public void auditPlanning() {
