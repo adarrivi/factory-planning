@@ -1,4 +1,4 @@
-package com.adarrivi.factory.view;
+package com.adarrivi.factory.view.planning;
 
 import java.awt.Color;
 import java.awt.Component;

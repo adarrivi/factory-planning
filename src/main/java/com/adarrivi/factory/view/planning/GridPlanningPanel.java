@@ -1,12 +1,10 @@
-package com.adarrivi.factory.view;
+package com.adarrivi.factory.view.planning;
 
 import java.awt.BorderLayout;
-import java.awt.Graphics;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
@@ -15,25 +13,16 @@ import com.adarrivi.factory.planning.Planning;
 import com.adarrivi.factory.planning.Worker;
 import com.adarrivi.factory.planning.WorkerDay;
 
-public class PlanningPanel extends JPanel implements Observer {
+public class GridPlanningPanel extends JPanel implements Observer {
     private static final long serialVersionUID = 1L;
 
     private Planning planning;
     private JTable gridTable;
-    private JLabel infoLabel;
 
-    public PlanningPanel(Planning initialPlanning) {
+    public GridPlanningPanel(Planning initialPlanning) {
         planning = initialPlanning;
         setLayout(new BorderLayout(0, 0));
         createGridPanel();
-        createInfoLabels();
-    }
-
-    private void createInfoLabels() {
-        JPanel panel = new JPanel();
-        add(panel, BorderLayout.SOUTH);
-        infoLabel = new JLabel("...");
-        panel.add(infoLabel);
     }
 
     private void createGridPanel() {
@@ -69,17 +58,10 @@ public class PlanningPanel extends JPanel implements Observer {
     }
 
     @Override
-    public void paintComponent(Graphics graphics) {
-        super.paintComponent(graphics);
-    }
-
-    @Override
     public void update(Observable o, Object currentSolution) {
         PlanningSolution solution = (PlanningSolution) currentSolution;
         planning = solution.getPlanning();
         drawWorkers();
-        infoLabel.setText("Best solution with score " + solution.getScore() + ", at temperature: " + solution.getTemperature()
-                + " (plannings created: " + solution.getPlanningsCreatedSoFar() + ")");
         repaint();
     }
 

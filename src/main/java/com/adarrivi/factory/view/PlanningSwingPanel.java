@@ -7,7 +7,7 @@ import javax.swing.SwingUtilities;
 
 public class PlanningSwingPanel extends JFrame {
     private static final int PLANNING_WIDTH = 800;
-    private static final int PLANNING_HEIGHT = 400;
+    private static final int PLANNING_HEIGHT = 450;
     private static final long serialVersionUID = 1L;
     private static final PlanningSwingPanel INSTANCE = new PlanningSwingPanel();
 
@@ -28,7 +28,7 @@ public class PlanningSwingPanel extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        PlanningContainer tspContainer = new PlanningContainer();
+        MainPlanningPanel tspContainer = new MainPlanningPanel();
         getContentPane().add(tspContainer);
     }
 }

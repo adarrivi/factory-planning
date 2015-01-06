@@ -6,7 +6,7 @@ public class PlanningProblemProperties {
 
     private Planning planning;
 
-    private double acceptableScore = 10000;
+    private double acceptableScore = 100;
 
     public void setPrefferedPlanning(Planning prefferedPlanning) {
         planning = prefferedPlanning;

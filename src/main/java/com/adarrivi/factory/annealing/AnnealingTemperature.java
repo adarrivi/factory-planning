@@ -2,22 +2,24 @@ package com.adarrivi.factory.annealing;
 
 public class AnnealingTemperature {
 
-    private int randomDays;
+    private static final int TEMPERATURE_DAYS_COEFICIENT = 2;
+
+    private int temperature;
 
     public AnnealingTemperature(int randomDays) {
-        this.randomDays = randomDays;
+        this.temperature = randomDays * TEMPERATURE_DAYS_COEFICIENT;
     }
 
     public void decreaseTemperature() {
-        randomDays--;
+        temperature--;
     }
 
     public boolean isThereEnergyLeft() {
-        return randomDays > 0;
+        return temperature > 0;
     }
 
     public int getRandomDays() {
-        return randomDays;
+        return Math.floorDiv(temperature, TEMPERATURE_DAYS_COEFICIENT);
     }
 
 }

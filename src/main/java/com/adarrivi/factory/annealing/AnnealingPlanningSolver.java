@@ -12,7 +12,7 @@ import com.adarrivi.factory.problem.PlanningProblemProperties;
 public class AnnealingPlanningSolver extends Observable {
 
     private static Logger LOGGER = LoggerFactory.getLogger(AnnealingPlanningSolver.class);
-    private static final int MAX_ITERATION_BEFORE_GIVING_UP = 3000;
+    private static final int MAX_ITERATION_BEFORE_GIVING_UP = 50000;
 
     private PlanningProblemProperties problemProperties;
     private double currentScore;

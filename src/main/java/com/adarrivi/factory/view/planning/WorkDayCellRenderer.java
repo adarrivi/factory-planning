@@ -1,10 +1,11 @@
-package com.adarrivi.factory.view;
+package com.adarrivi.factory.view.planning;
 
 import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.adarrivi.factory.planning.ShiftType;
@@ -28,21 +29,22 @@ public class WorkDayCellRenderer extends DefaultTableCellRenderer {
         } else {
             cellLabel.setBackground(Color.WHITE);
         }
+        cellLabel.setHorizontalAlignment(SwingConstants.CENTER);
         return cellLabel;
 
     }
 
     private Color getCellColor(WorkerDay workerDay) {
         if (workerDay.isHoliday()) {
-            return Color.GRAY;
+            return new Color(197, 199, 189);
         }
         if (ShiftType.EARLY.equals(workerDay.getShiftType())) {
-            return Color.YELLOW;
+            return new Color(200, 240, 2);
         }
         if (ShiftType.LATE.equals(workerDay.getShiftType())) {
-            return Color.GREEN;
+            return new Color(130, 156, 0);
         }
-        return Color.WHITE;
+        return new Color(200, 250, 249);
     }
 
     private String getCellValue(WorkerDay workerDay) {
