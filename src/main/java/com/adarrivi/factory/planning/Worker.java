@@ -34,6 +34,10 @@ public class Worker {
         return name;
     }
 
+    public List<String> getAllowedLines() {
+        return allowedLines;
+    }
+
     public WorkerDay getDay(int day) {
         return workDays.stream().filter(workDay -> workDay.getDay() == day).findAny().get();
     }

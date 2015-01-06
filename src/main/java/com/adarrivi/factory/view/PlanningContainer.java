@@ -1,5 +1,6 @@
 package com.adarrivi.factory.view;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -18,11 +19,12 @@ public class PlanningContainer extends JPanel {
     private PlanningProblemProperties problem;
 
     public PlanningContainer() {
-        setLayout(null);
-        setVisible(true);
+        setLayout(new BorderLayout(0, 0));
         DefaultPlanningProblem testProblem = new DefaultPlanningProblem();
         problem = testProblem.createDefaultProblem();
         solver = new AnnealingPlanningSolver(problem);
+        createRestartButton();
+        createPlanningPanel();
     }
 
     public void startNewRandomProblem() {
@@ -34,20 +36,16 @@ public class PlanningContainer extends JPanel {
         thread.start();
     }
 
-    public void draw() {
-        createRestartButton();
-        createPlanningPanel();
-    }
-
     private void createPlanningPanel() {
-        PlanningPanel planningPanel = new PlanningPanel(10, 34, 800, 200, problem.getPlanning());
+        PlanningPanel planningPanel = new PlanningPanel(problem.getPlanning());
         add(planningPanel);
         solver.addObserver(planningPanel);
     }
 
     private void createRestartButton() {
+        JPanel panel = new JPanel();
+        add(panel, BorderLayout.NORTH);
         restartButton = new JButton("Restart");
-        restartButton.setBounds(10, 11, 89, 23);
         restartButton.addActionListener(new ActionListener() {
 
             @Override
@@ -57,6 +55,6 @@ public class PlanningContainer extends JPanel {
 
             }
         });
-        add(restartButton);
+        panel.add(restartButton);
     }
 }

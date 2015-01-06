@@ -6,12 +6,10 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 public class PlanningSwingPanel extends JFrame {
-    private static final int PLANNING_SIZE = 800;
+    private static final int PLANNING_WIDTH = 800;
+    private static final int PLANNING_HEIGHT = 400;
     private static final long serialVersionUID = 1L;
     private static final PlanningSwingPanel INSTANCE = new PlanningSwingPanel();
-
-    private static final int X_OFFSET = 100;
-    private static final int Y_OFFSET = 130;
 
     public static void main(String[] args) {
         INSTANCE.run();
@@ -24,14 +22,13 @@ public class PlanningSwingPanel extends JFrame {
 
     private void createPanel() {
         setTitle("Factory Planning");
-        Rectangle dialogPos = new Rectangle(100, 100, PLANNING_SIZE + X_OFFSET, PLANNING_SIZE + Y_OFFSET);
+        Rectangle dialogPos = new Rectangle(0, 0, PLANNING_WIDTH, PLANNING_HEIGHT);
 
         setBounds(dialogPos);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         PlanningContainer tspContainer = new PlanningContainer();
-        tspContainer.draw();
         getContentPane().add(tspContainer);
     }
 }
