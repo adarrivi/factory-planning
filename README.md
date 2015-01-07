@@ -1,5 +1,7 @@
 The goal of this project is to find a **good approximation** to the best planning for the workers in a factory, given certain rules and preferences.
 
+[![Build Status](https://travis-ci.org/adarrivi/factory-planning.png)](https://travis-ci.org/adarrivi/factory-planning)
+
 
 ## Problem description
 Given a factory with multiple workers and production lines, try organize the shifts and holidays as good as possible.
