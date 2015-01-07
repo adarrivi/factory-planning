@@ -59,7 +59,8 @@ Unfortunately there aren't many exciting architectural challenges in this projec
 ## TODO List
 Here is the list of things that can be improved or are missing:
 - [ ] More Unit tests: I wasn't very sure about the approach to take to solve this problem, so I left them aside (yes, I feel ashamed)
-- [ ] [SonarQube](http://www.sonarqube.org/) analysis: to detect cycles and things I am missing in the code
+- [x] [SonarQube](http://www.sonarqube.org/) analysis: to detect cycles and things I am missing in the code
+- [x] Use Travis CI to set the nice build status icon at the beginning
 - [ ] Dynamic number of Shifts per day: currently there are only two, and they are fixed.
 - [ ] Review the randomization of the plannings: I still have the feeling that many more combinations can be removed.
 - [ ] Not so fast as I would like to: also I have notice that the algorithm finds too many local peaks without - moving forward. Increasing the number of retries fixes it, but it has a high performance impact. 
