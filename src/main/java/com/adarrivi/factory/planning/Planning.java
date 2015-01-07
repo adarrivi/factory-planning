@@ -67,7 +67,7 @@ public class Planning {
 
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (Worker worker : allWorkers) {
             sb.append(worker).append("\n");
         }

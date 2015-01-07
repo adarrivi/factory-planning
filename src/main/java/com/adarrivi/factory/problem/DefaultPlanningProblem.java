@@ -15,9 +15,9 @@ public class DefaultPlanningProblem {
     private static final String L2 = "L2";
     private static final String L3 = "L3";
 
-    private static final Function<Integer, WorkerDay> HOLIDAY_SUPPLIER = (day) -> WorkerDay.createHoliday(day);
-    private static final Function<Integer, WorkerDay> EARLY_SUPPLIER = (day) -> WorkerDay.createEarlyShiftPreference(day);
-    private static final Function<Integer, WorkerDay> LATE_SUPPLIER = (day) -> WorkerDay.createLateShiftPreference(day);
+    private static final Function<Integer, WorkerDay> HOLIDAY_SUPPLIER = day -> WorkerDay.createHoliday(day);
+    private static final Function<Integer, WorkerDay> EARLY_SUPPLIER = day -> WorkerDay.createEarlyShiftPreference(day);
+    private static final Function<Integer, WorkerDay> LATE_SUPPLIER = day -> WorkerDay.createLateShiftPreference(day);
 
     private PlanningTestBuilder builder;
 

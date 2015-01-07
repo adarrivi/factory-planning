@@ -31,6 +31,7 @@ class LongRestRule extends BasicPlanningRule {
         occurrences += countConsecutiveHolidaySeries(holidays);
     }
 
+    // TODO The if/else statements are too deep. Needs unit testing and refactor
     private int countConsecutiveHolidaySeries(List<WorkerDay> holidays) {
         int totalSeriesFound = 0;
         int currentSerieCount = 0;

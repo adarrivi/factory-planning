@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 
 public class Worker {
 
-    private static final Predicate<WorkerDay> HOLIDAY_ONLY_PREDICATE = (day) -> day.isHoliday();
-    private static final Predicate<WorkerDay> WORKING_ONLY_PREDICATE = (day) -> day.isWorkingDay();
-    private static final Predicate<WorkerDay> FREE_ONLY_PREDICATE = (day) -> day.isFree();
+    private static final Predicate<WorkerDay> HOLIDAY_ONLY_PREDICATE = day -> day.isHoliday();
+    private static final Predicate<WorkerDay> WORKING_ONLY_PREDICATE = day -> day.isWorkingDay();
+    private static final Predicate<WorkerDay> FREE_ONLY_PREDICATE = day -> day.isFree();
 
     private String name;
     private List<String> allowedLines = new ArrayList<>();
